@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "navs": [
+    {
+      "name": "Example",
+      "url": "https://www.example.com",
+      "icon": "https://www.example.com/favicon.ico"
+    }
+  ]
+}
