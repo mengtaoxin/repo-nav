@@ -75,7 +75,6 @@ export function NavItemDetail({
               value={formData.name}
               onChange={handleChange("name")}
               placeholder="Example"
-              disabled={!isEditable}
               readOnly={!isEditable}
             />
           </div>
@@ -86,7 +85,6 @@ export function NavItemDetail({
               value={formData.url}
               onChange={handleChange("url")}
               placeholder="https://www.example.com"
-              disabled={!isEditable}
               readOnly={!isEditable}
               className={!isEditable ? "" : !isUrlValid && formData.url ? "border-red-500" : ""}
             />
@@ -101,7 +99,6 @@ export function NavItemDetail({
               value={formData.icon}
               onChange={handleChange("icon")}
               placeholder="https://www.example.com/favicon.ico"
-              disabled={!isEditable}
               readOnly={!isEditable}
               className={!isEditable ? "" : !isIconUrlValid && formData.icon ? "border-red-500" : ""}
             />
@@ -116,7 +113,6 @@ export function NavItemDetail({
               value={formData.localRepoPath}
               onChange={handleChange("localRepoPath")}
               placeholder="/Users/username/repos/project"
-              disabled={!isEditable}
               readOnly={!isEditable}
               className={!isEditable ? "" : !isLocalRepoPathValid && formData.localRepoPath ? "border-red-500" : ""}
             />
@@ -131,7 +127,6 @@ export function NavItemDetail({
               value={formData.category}
               onChange={handleChange("category")}
               placeholder="uncategorized"
-              disabled={!isEditable}
               readOnly={!isEditable}
             />
           </div>
@@ -142,7 +137,6 @@ export function NavItemDetail({
               value={formData.tags}
               onChange={handleChange("tags")}
               placeholder="ai, alibaba"
-              disabled={!isEditable}
               readOnly={!isEditable}
             />
           </div>
@@ -156,10 +150,9 @@ export function NavItemDetail({
                 onFieldChange("description", e.target.value);
               }}
               placeholder="Brief overview of the item"
-              disabled={!isEditable}
               readOnly={!isEditable}
               rows={4}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
           </div>
         </div>
