@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { NavItem } from "@/components/nav-item";
+import { DataManager } from "@/components/data-manager";
 import { navDataManager, type NavData } from "@/lib/nav-data";
 
 export default function Home() {
@@ -37,7 +38,6 @@ export default function Home() {
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load data only on client side to avoid hydration mismatch
   useEffect(() => {
@@ -146,6 +146,7 @@ export default function Home() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          <DataManager onDataImported={setData} currentData={data} />
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>Add Navigation</Button>
