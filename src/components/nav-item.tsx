@@ -39,7 +39,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
 
   return (
     <Card 
-      className={`relative transition-all ${isDeleteMode ? 'cursor-pointer hover:border-destructive hover:shadow-md' : ''} ${draggable ? 'cursor-move' : ''}`}
+      className={`relative transition-all hover:shadow-lg ${isDeleteMode ? 'cursor-pointer hover:border-destructive' : 'hover:border-primary'} ${draggable ? 'cursor-move' : ''}`}
       onClick={cardClickHandler}
       draggable={draggable}
       onDragStart={onDragStart}
