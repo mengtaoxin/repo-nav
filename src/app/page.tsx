@@ -26,7 +26,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { NavItem } from "@/components/nav-item";
-import { DataManager } from "@/components/data-manager";
 import { navDataManager, type NavData } from "@/lib/nav-data";
 
 export default function Home() {
@@ -90,11 +89,6 @@ export default function Home() {
     setEditOpen(false);
     setEditIndex(null);
     setEditMode(false);
-  };
-
-  const handleReset = () => {
-    const newData = navDataManager.reset();
-    setData(newData);
   };
 
   const handleDragStart = (index: number) => (e: React.DragEvent) => {
@@ -164,24 +158,6 @@ export default function Home() {
           >
             {moveMode ? "Cancel Move" : "Move"}
           </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline">Reset</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will reset all navigation items to the default data. This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <DataManager onDataImported={setData} currentData={data} />
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button>Add Navigation</Button>
