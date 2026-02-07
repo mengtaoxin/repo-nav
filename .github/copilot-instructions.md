@@ -7,7 +7,7 @@
 
 ### Data Management Layer
 - **Single source of truth**: [src/lib/nav-data.ts](src/lib/nav-data.ts) exports `navDataManager` object with CRUD operations
-- **Storage abstraction**: All persistent state uses browser `localStorage` with key `"repo_nav_data_v1"`
+- **Storage abstraction**: All persistent state uses browser `localStorage` with key `"repo_nav_data"`
 - **Data model**: `NavItem` interface has required fields (name, url, icon) and optional fields (localRepoPath, tags, description)
 - **Type safety**: `NavData` wraps array of `NavItem[]` plus optional global tags
 

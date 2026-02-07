@@ -17,7 +17,7 @@ const seedData = {
 };
 
 beforeEach(() => {
-  localStorage.setItem("repo_nav_data_v1", JSON.stringify(seedData));
+  localStorage.setItem("repo_nav_data", JSON.stringify(seedData));
 });
 
 afterEach(() => {

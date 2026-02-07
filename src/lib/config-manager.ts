@@ -1,6 +1,6 @@
 import defaultSettings from "@/resources/default-settings.json";
 
-const STORAGE_KEY = "repo_nav_configs_v1";
+const STORAGE_KEY = "repo_nav_configs";
 
 export type Theme = "default" | "dark" | "light";
 

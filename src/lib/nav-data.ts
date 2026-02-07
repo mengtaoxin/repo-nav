@@ -1,6 +1,6 @@
 import defaultData from "@/resources/default-data.json";
 
-const STORAGE_KEY = "repo_nav_data_v1";
+const STORAGE_KEY = "repo_nav_data";
 
 export interface Tag {
   name: string;
