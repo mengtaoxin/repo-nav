@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "navs": [
+    {
+      "name": "react",
+      "url": "https://github.com/facebook/react",
+      "icon": "https://react.dev/favicon.ico",
+      "category": "uncategorized",
+      "tags": [
+        "facebook",
+        "react"
+      ],
+      "description": "The library for web and native user interfaces."
+    },
+    {
+      "name": "nextjs",
+      "url": "https://github.com/vercel/next.js",
+      "icon": "https://nextjs.org/favicon.ico",
+      "category": "uncategorized",
+      "tags": [
+        "vercel",
+        "react"
+      ],
+      "description": "The React Framework"
+    },
+    {
+      "name":"shadcn-ui",
+      "url":"https://github.com/shadcn-ui/ui",
+      "icon":"https://ui.shadcn.com/favicon.ico",
+      "category":"UI Library",
+      "description": "A set of beautifully-designed, accessible components and a code distribution platform. Works with your favorite frameworks. Open Source. Open Code."
+    }
+  ],
+  "tags": [
+    {
+      "name": "facebook"
+    },
+    {
+      "name": "react",
+      "icon": "https://react.dev/favicon.ico"
+    },
+    {
+      "name": "vercel"
+    }
+  ]
+}

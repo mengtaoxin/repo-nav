@@ -1,0 +1,116 @@
+{
+  "site": {
+    "name": "Repo Nav",
+    "title": "Repo Nav - Bookmark & Organize Your Git Repositories",
+    "shortDescription": "Powerful repository bookmarking and organization tool",
+    "description": "A powerful repository bookmarking and navigation tool. Organize your GitHub, GitLab, and Bitbucket repositories with categories, tags, and quick access shortcuts. Store all your repo links locally with no data loss.",
+    "url": "https://repo-nav.example.com",
+    "keywords": [
+      "repository management",
+      "git bookmarks",
+      "repo navigator",
+      "github organizer",
+      "code repository"
+    ]
+  },
+  "authors": {
+    "name": "Repo Nav Team",
+    "creator": "Repo Nav Team",
+    "publisher": "Repo Nav"
+  },
+  "viewport": "width=device-width, initial-scale=1, maximum-scale=5",
+  "openGraph": {
+    "type": "website",
+    "locale": "en_US",
+    "siteName": "Repo Nav",
+    "imageUrl": "https://repo-nav.example.com/og-image.png",
+    "imageWidth": 1200,
+    "imageHeight": 630,
+    "imageAlt": "Repo Nav - Repository Navigation Tool"
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "imageUrl": "https://repo-nav.example.com/og-image.png"
+  },
+  "robots": {
+    "index": true,
+    "follow": true,
+    "maxImagePreview": "large",
+    "maxSnippet": -1,
+    "maxVideoPreview": -1
+  },
+  "manifest": {
+    "name": "Repo Nav",
+    "shortName": "Repo Nav",
+    "description": "Bookmark & organize your Git repositories with ease",
+    "startUrl": "/",
+    "scope": "/",
+    "display": "standalone",
+    "backgroundColor": "#ffffff",
+    "themeColor": "#3b82f6",
+    "orientation": "portrait-primary",
+    "icons": [
+      {
+        "src": "/icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "/icon-192-maskable.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "maskable"
+      }
+    ]
+  },
+  "pages": {
+    "home": {
+      "title": "Repo Nav - Bookmark & Organize Your Git Repositories",
+      "description": "A powerful repository bookmarking and navigation tool. Organize your repositories with categories and tags."
+    },
+    "tags": {
+      "title": "Tags - Repo Nav",
+      "description": "Manage and organize repository tags. Create, edit, and organize your repository bookmarks with custom tags for better organization."
+    },
+    "settings": {
+      "title": "Settings - Repo Nav",
+      "description": "Configure Repo Nav settings. Customize theme, import/export data, and manage application preferences."
+    }
+  },
+  "sitemap": {
+    "pages": [
+      {
+        "path": "/",
+        "changeFrequency": "daily",
+        "priority": 1
+      },
+      {
+        "path": "/tags",
+        "changeFrequency": "weekly",
+        "priority": 0.8
+      },
+      {
+        "path": "/settings",
+        "changeFrequency": "monthly",
+        "priority": 0.5
+      }
+    ]
+  },
+  "schema": {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "applicationCategory": "ProductivityApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+}
