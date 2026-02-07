@@ -127,14 +127,15 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
             </div>
           )}
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               {isInMode ? (
                 <Button 
                   variant="outline" 
                   size="sm" 
                   disabled
+                  className="h-7 px-2 text-xs"
                 >
-                  <Link className="h-4 w-4 flex-shrink-0" />
+                  <Link className="h-3 w-3 flex-shrink-0" />
                   <span>URL</span>
                 </Button>
               ) : (
@@ -142,14 +143,15 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                   variant="outline" 
                   size="sm" 
                   asChild
+                  className="h-7 px-2 text-xs"
                 >
                   <a
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5"
+                    className="flex items-center gap-1"
                   >
-                    <Link className="h-4 w-4 flex-shrink-0" />
+                    <Link className="h-3 w-3 flex-shrink-0" />
                     <span>URL</span>
                   </a>
                 </Button>
@@ -159,8 +161,9 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                 size="sm"
                 disabled={isInMode}
                 onClick={onDetailClick}
+                className="h-7 px-2 text-xs"
               >
-                <Info className="h-4 w-4" />
+                <Info className="h-3 w-3" />
                 <span>Details</span>
               </Button>
             </div>
@@ -179,8 +182,9 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                         }
                         window.location.href = `vscode://file/${localRepoPath}`;
                       }}
+                      className="h-7 px-2 text-xs"
                     >
-                      <Code className="h-4 w-4" />
+                      <Code className="h-3 w-3" />
                       <span>Open in VS Code</span>
                     </Button>
                   </span>
