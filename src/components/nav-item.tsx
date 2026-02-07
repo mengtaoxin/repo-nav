@@ -1,16 +1,19 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface NavItemProps {
   name: string;
   url: string;
   icon: string;
-  onDelete: () => void;
+  onClick?: () => void;
+  isDeleteMode?: boolean;
 }
 
-export function NavItem({ name, url, icon, onDelete }: NavItemProps) {
+export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps) {
   return (
-    <Card className="relative">
+    <Card 
+      className={`relative transition-all ${isDeleteMode ? 'cursor-pointer hover:border-destructive hover:shadow-md' : ''}`}
+      onClick={isDeleteMode ? onClick : undefined}
+    >
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -26,14 +29,6 @@ export function NavItem({ name, url, icon, onDelete }: NavItemProps) {
             )}
             <CardTitle className="text-lg">{name}</CardTitle>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onDelete}
-            className="h-8 text-destructive hover:text-destructive"
-          >
-            Delete
-          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -42,6 +37,7 @@ export function NavItem({ name, url, icon, onDelete }: NavItemProps) {
           target="_blank"
           rel="noopener noreferrer"
           className="text-sm text-muted-foreground hover:text-foreground hover:underline"
+          onClick={(e) => isDeleteMode && e.preventDefault()}
         >
           {url}
         </a>

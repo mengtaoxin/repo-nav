@@ -45,6 +45,8 @@ export default function Home() {
   const [data, setData] = useState<NavData | null>(null);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", url: "", icon: "" });
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -69,15 +71,23 @@ export default function Home() {
     setOpen(false);
   };
 
-  const handleDelete = (index: number) => {
-    if (!data) return;
+  const handleDeleteConfirm = () => {
+    if (!data || deleteIndex === null) return;
 
     const newData = {
       ...data,
-      navs: data.navs.filter((_, i) => i !== index),
+      navs: data.navs.filter((_, i) => i !== deleteIndex),
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
     setData(newData);
+    setDeleteIndex(null);
+    setDeleteMode(false);
+  };
+
+  const handleNavItemClick = (index: number) => {
+    if (deleteMode) {
+      setDeleteIndex(index);
+    }
   };
 
   const handleReset = () => {
@@ -103,6 +113,12 @@ export default function Home() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button 
+            variant={deleteMode ? "destructive" : "outline"}
+            onClick={() => setDeleteMode(!deleteMode)}
+          >
+            {deleteMode ? "Cancel Delete" : "Delete"}
+          </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="outline">Reset</Button>
@@ -178,18 +194,45 @@ export default function Home() {
           </CardHeader>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {data.navs.map((nav, index) => (
-            <NavItem
-              key={index}
-              name={nav.name}
-              url={nav.url}
-              icon={nav.icon}
-              onDelete={() => handleDelete(index)}
-            />
-          ))}
-        </div>
+        <>
+          {deleteMode && (
+            <div className="mb-4 rounded-lg border border-destructive bg-destructive/10 p-4">
+              <p className="text-sm text-destructive font-medium">
+                Delete mode is active. Click on any navigation item to delete it.
+              </p>
+            </div>
+          )}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {data.navs.map((nav, index) => (
+              <NavItem
+                key={index}
+                name={nav.name}
+                url={nav.url}
+                icon={nav.icon}
+                onClick={() => handleNavItemClick(index)}
+                isDeleteMode={deleteMode}
+              />
+            ))}
+          </div>
+        </>
       )}
+
+      <AlertDialog open={deleteIndex !== null} onOpenChange={(open) => !open && setDeleteIndex(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Navigation Item?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{deleteIndex !== null && data.navs[deleteIndex]?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
