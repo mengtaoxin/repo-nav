@@ -1,87 +1,31 @@
 # Copilot Instructions for repo-nav
 
-## Project Overview
-**repo-nav** is a Next.js 16 + TypeScript + shadcn/ui repository navigator and bookmarking application. It allows users to manage, organize, and browse repository links with metadata (tags, descriptions, icons) stored in browser localStorage.
+## Overview
+repo-nav is a Next.js 16 + TypeScript + shadcn/ui app for bookmarking repositories. All user data and settings persist in browser localStorage and are loaded client-side to avoid hydration mismatch.
 
-## Key Architecture Patterns
+## Architecture & Data Flow
+- Single source of truth for navigation data is `navDataManager` in [src/lib/nav-data.ts](src/lib/nav-data.ts). It reads/writes localStorage key "repo_nav_data" and seeds from [src/resources/default-data.json](src/resources/default-data.json).
+- App settings are managed by `configManager` in [src/lib/config-manager.ts](src/lib/config-manager.ts) with localStorage key "repo_nav_configs" and defaults in [src/resources/default-settings.json](src/resources/default-settings.json).
+- All pages are client components and load data in `useEffect` (see [src/app/page.tsx](src/app/page.tsx), [src/app/tags/page.tsx](src/app/tags/page.tsx), [src/app/settings/page.tsx](src/app/settings/page.tsx)).
 
-### Data Management Layer
-- **Single source of truth**: [src/lib/nav-data.ts](src/lib/nav-data.ts) exports `navDataManager` object with CRUD operations
-- **Storage abstraction**: All persistent state uses browser `localStorage` with key `"repo_nav_data"`
-- **Data model**: `NavItem` interface has required fields (name, url, icon) and optional fields (localRepoPath, tags, description)
-- **Type safety**: `NavData` wraps array of `NavItem[]` plus optional global tags
+## Key UI Patterns
+- Main list page groups nav items by `category` with default "uncategorized" from `navDataManager.processItem()` (see [src/lib/nav-data.ts](src/lib/nav-data.ts)).
+- Mode-based interactions (edit/delete/move) change click behavior and disable certain buttons in [src/app/page.tsx](src/app/page.tsx).
+- Drag-and-drop reorder uses native drag events and `navDataManager.reorder()`.
+- `NavItem` renders icons with Next `Image` for local/data URLs and `<img>` for external URLs; includes an "Open in VS Code" action that navigates to `vscode://file/${localRepoPath}` (see [src/components/nav-item.tsx](src/components/nav-item.tsx)).
 
-### UI Component Architecture
-- **Client-side rendering**: Main app is "use client" component ([src/app/page.tsx](src/app/page.tsx)) - data loads only in useEffect to prevent hydration mismatch
-- **Modal-driven forms**: Uses shadcn/ui Dialog for add/edit, AlertDialog for deletions
-- **Mode-based interactions**: Edit/delete modes toggled via UI buttons, click handler behavior changes based on active mode
-- **Drag-and-drop reordering**: Native HTML drag events with custom drop logic
+## Tag & Settings Conventions
+- Tags are global `Tag` objects in `NavData.tags` and per-item `tags` are string arrays. Tag delete is blocked if in use via `navDataManager.deleteTag()` and `getTagUsageCount()` (see [src/app/tags/page.tsx](src/app/tags/page.tsx)).
+- Tag icons are resolved via `tagConfig` in `NavItem` and rendered inline next to tag chips (see [src/components/nav-item.tsx](src/components/nav-item.tsx)).
+- Theme is applied by `configManager.applyTheme()` using html classes "dark"/"light"/"default" (see [src/lib/config-manager.ts](src/lib/config-manager.ts)).
 
-### Component Organization
-- [src/components/nav-item.tsx](src/components/nav-item.tsx) - Renders individual repository card with conditional icon handling (local vs external URLs)
-- [src/components/data-manager.tsx](src/components/data-manager.tsx) - Export/import JSON functionality with file validation
-- [src/components/ui/](src/components/ui/) - shadcn/ui primitives (Button, Card, Dialog, Input, etc.)
+## Developer Workflows
+- Dev server: `npm run dev`
+- Build: `npm run build`
+- Lint: `npm run lint`
+- Tests (jsdom): `npm run test` with example in [src/app/page.test.tsx](src/app/page.test.tsx)
+- Path alias: `@/*` maps to src via [tsconfig.json](tsconfig.json)
 
-## Development Workflows
-
-### Core Commands
-```bash
-npm run dev          # Start Next.js dev server on http://localhost:3000
-npm run build        # Production build
-npm run start        # Run production server
-npm run lint         # ESLint check (ESLint 9 + Next.js config)
-npm run test         # Jest tests (jsdom environment)
-```
-
-### Testing Setup
-- Jest configured with jsdom environment ([jest.config.ts](jest.config.ts))
-- Module path alias: `@/` maps to `src/`
-- Test file pattern: `*.test.tsx`
-- Example: [src/app/page.test.tsx](src/app/page.test.tsx)
-
-### Build Configuration
-- TypeScript strict mode enabled
-- Path alias: `@/*` → `./src/*` in [tsconfig.json](tsconfig.json)
-- Next.js 16.1.6 with React 19.2.3
-- Tailwind CSS v4 via `@tailwindcss/postcss`
-
-## Project-Specific Conventions
-
-### Form Data Handling
-- Form state holds strings for all fields (e.g., `tags` as comma-separated string)
-- `navDataManager.processItem()` converts tags string to array before storage
-- Reset form after successful submission/modal close
-
-### Icon Handling
-- Icons stored as URLs (external: `https://`, local: `/path`, or data URIs)
-- [src/components/nav-item.tsx](src/components/nav-item.tsx) uses conditional rendering: Next.js `Image` for local, `<img>` for external
-
-### Data Import/Export
-- Import validates structure: must have `version` and `navs: Array`
-- Export filename includes ISO date: `repo-nav-data-YYYY-MM-DD.json`
-- File input reset after import to allow re-importing same file
-
-### Default Data
-- Fallback data loaded from [src/resources/default-data.json](src/resources/default-data.json)
-- Data model: `version` (string) + `navs` array + optional `tags` global array
-
-## Dependencies & Integration Points
-- **shadcn/ui**: Composable React components via Radix UI primitives
-- **Lucide React**: Icon library (if needed for additional icons)
-- **clsx + tailwind-merge**: Class composition for dynamic styling
-- **class-variance-authority**: Component variant management for shadcn/ui
-
-## Common Tasks
-
-**Adding a new navigation item**:
-1. Form validation in modal (name, url required)
-2. Call `navDataManager.add(data, formData)` 
-3. Update state with returned new data
-4. Reset form and close modal
-
-**Exporting user data**:
-- DataManager component handles export (stringified NavData + download)
-
-**Handling localStorage edge cases**:
-- Always check `typeof window !== "undefined"` before accessing localStorage
-- Load data in useEffect on client, initialize state as null server-side
+## Import/Export Data
+- Import/export is handled by `DataManager` in [src/components/data-manager.tsx](src/components/data-manager.tsx); export filename uses date `repo-nav-data-YYYY-MM-DD.json`.
+- Import validation expects `version` and `navs` fields before replacing localStorage.

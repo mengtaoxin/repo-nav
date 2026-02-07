@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -11,6 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { DataManager } from "@/components/data-manager";
 import { navDataManager, type NavData } from "@/lib/nav-data";
 import { configManager, type Theme } from "@/lib/config-manager";
@@ -19,6 +30,7 @@ export default function Settings() {
   const [data, setData] = useState<NavData | null>(null);
   const [theme, setTheme] = useState<Theme>("default");
   const [enableTagColor, setEnableTagColor] = useState<boolean>(true);
+  const [resetOpen, setResetOpen] = useState(false);
 
   // Load data and theme on client side
   useEffect(() => {
@@ -42,6 +54,12 @@ export default function Settings() {
     const newValue = !enableTagColor;
     setEnableTagColor(newValue);
     configManager.setEnableTagColor(newValue);
+  };
+
+  const handleResetData = () => {
+    const resetData = navDataManager.reset();
+    setData(resetData);
+    setResetOpen(false);
   };
 
   return (
@@ -128,7 +146,39 @@ export default function Settings() {
             <DataManager onDataImported={setData} currentData={data} importOnly={true} />
           </CardContent>
         </Card>
+
+        {/* Reset Data */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Reset Data</CardTitle>
+            <CardDescription>
+              Reset all navigation data to default values. This action cannot be undone.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button variant="destructive" onClick={() => setResetOpen(true)}>
+              Reset All Data
+            </Button>
+          </CardContent>
+        </Card>
       </div>
+
+      <AlertDialog open={resetOpen} onOpenChange={setResetOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset All Data?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will reset all navigation data to default values. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleResetData} className="bg-destructive hover:bg-destructive/90">
+              Reset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

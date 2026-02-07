@@ -2,32 +2,45 @@
   "version": "1.0",
   "navs": [
     {
-      "name": "higress",
-      "url": "https://github.com/alibaba/higress",
-      "icon": "https://www.google.com/favicon.ico",
+      "name": "react",
+      "url": "https://github.com/facebook/react",
+      "icon": "https://react.dev/favicon.ico",
       "category": "uncategorized",
       "tags": [
-        "ai",
-        "alibaba"
+        "facebook",
+        "react"
       ],
-      "description": "Higress is a cloud-native API gateway built on top of Kubernetes and Envoy, designed to provide high performance, scalability, and reliability for microservices architectures."
+      "description": "The library for web and native user interfaces."
     },
     {
-      "name": "higress2",
-      "url": "https://github.com/alibaba/higress",
-      "icon": "https://www.google.com/favicon.ico",
+      "name": "nextjs",
+      "url": "https://github.com/vercel/next.js",
+      "icon": "https://nextjs.org/favicon.ico",
       "category": "uncategorized",
       "tags": [
-        "ai",
-        "banana"
+        "vercel",
+        "react"
       ],
-      "description": "Higress is a cloud-native API gateway built on top of Kubernetes and Envoy, designed to provide high performance, scalability, and reliability for microservices architectures."
+      "description": "The React Framework"
+    },
+    {
+      "name":"shadcn-ui",
+      "url":"https://github.com/shadcn-ui/ui",
+      "icon":"https://ui.shadcn.com/favicon.ico",
+      "category":"UI Library",
+      "description": "A set of beautifully-designed, accessible components and a code distribution platform. Works with your favorite frameworks. Open Source. Open Code."
     }
   ],
   "tags": [
     {
-      "name": "ai",
-      "icon": "https://www.flaticon.com/free-icons/chatbot"
+      "name": "facebook"
+    },
+    {
+      "name": "react",
+      "icon": "https://react.dev/favicon.ico"
+    },
+    {
+      "name": "vercel"
     }
   ]
 }
