@@ -120,7 +120,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                   <MyTag
                     key={index}
                     name={tag}
-                    icon={iconUrl ? <img src={iconUrl} alt="" className="w-4 h-4 rounded" /> : undefined}
+                    icon={iconUrl ? <img src={iconUrl} alt={tag} className="w-4 h-4 rounded" /> : undefined}
                   />
                 );
               })}
