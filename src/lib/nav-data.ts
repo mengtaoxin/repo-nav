@@ -14,6 +14,7 @@ export interface NavItem {
 export interface NavData {
   version: string;
   navs: NavItem[];
+  tags?: Tag[];
 }
 
 export const navDataManager = {
@@ -131,5 +132,66 @@ export const navDataManager = {
     const data = defaultData as NavData;
     this.save(data);
     return data;
+  },
+
+  /**
+   * Add a global tag
+   */
+  addTag(data: NavData, tag: Tag): NavData {
+    const newData = {
+      ...data,
+      tags: [...(data.tags || []), tag],
+    };
+    this.save(newData);
+    return newData;
+  },
+
+  /**
+   * Update a global tag
+   */
+  updateTag(data: NavData, index: number, tag: Tag): NavData {
+    const newData = {
+      ...data,
+      tags: (data.tags || []).map((t, i) => (i === index ? tag : t)),
+    };
+    this.save(newData);
+    return newData;
+  },
+
+  /**
+   * Delete a global tag (only if not used in any nav items)
+   */
+  deleteTag(data: NavData, index: number): NavData | null {
+    const tags = data.tags || [];
+    const tagToDelete = tags[index];
+    
+    // Check if tag is used in any nav items
+    const isUsed = data.navs.some(nav => 
+      nav.tags?.some(t => 
+        typeof t === 'string' ? t === tagToDelete.name : t.name === tagToDelete.name
+      )
+    );
+    
+    if (isUsed) {
+      return null; // Cannot delete tag that is in use
+    }
+    
+    const newData = {
+      ...data,
+      tags: tags.filter((_, i) => i !== index),
+    };
+    this.save(newData);
+    return newData;
+  },
+
+  /**
+   * Get tags usage count
+   */
+  getTagUsageCount(data: NavData, tagName: string): number {
+    return data.navs.filter(nav => 
+      nav.tags?.some(t => 
+        typeof t === 'string' ? t === tagName : t.name === tagName
+      )
+    ).length;
   },
 };

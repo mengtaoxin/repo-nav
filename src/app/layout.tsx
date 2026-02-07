@@ -38,12 +38,14 @@ export default function RootLayout({
                 <span className="text-sm font-semibold tracking-tight">Repo Nav</span>
               </div>
               <nav className="flex items-center gap-6 text-sm text-muted-foreground">
-                <span>Projects</span>
+                <Link href="/" className="hover:text-foreground transition-colors">
+                  Projects
+                </Link>
+                <Link href="/tags" className="hover:text-foreground transition-colors">
+                  Tags
+                </Link>
                 <span>Insights</span>
                 <span>Settings</span>
-                <Link href="/dashboard" className="hover:text-foreground transition-colors">
-                  Dashboard
-                </Link>
               </nav>
             </div>
           </header>
