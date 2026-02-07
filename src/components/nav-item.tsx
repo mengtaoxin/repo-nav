@@ -190,7 +190,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                   </span>
                 </TooltipTrigger>
                 {openDisabledReason && (
-                  <TooltipContent>
+                  <TooltipContent side="right">
                     {openDisabledReason}
                   </TooltipContent>
                 )}
