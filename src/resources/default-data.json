@@ -4,7 +4,12 @@
     {
       "name": "higress",
       "url": "https://github.com/alibaba/higress",
-      "icon": "https://www.google.com/favicon.ico"
+      "icon": "https://www.google.com/favicon.ico",
+      "tags": [
+        "ai",
+        "alibaba"
+      ],
+      "description": "Higress is a cloud-native API gateway built on top of Kubernetes and Envoy, designed to provide high performance, scalability, and reliability for microservices architectures."
     }
   ]
 }

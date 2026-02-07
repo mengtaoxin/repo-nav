@@ -7,6 +7,8 @@ export interface NavItem {
   url: string;
   icon: string;
   localRepoPath?: string;
+  tags?: string[];
+  description?: string;
 }
 
 export interface NavData {
@@ -42,10 +44,11 @@ export const navDataManager = {
   /**
    * Add a new navigation item
    */
-  add(data: NavData, item: NavItem): NavData {
+  add(data: NavData, item: any): NavData {
+    const processedItem = this.processItem(item);
     const newData = {
       ...data,
-      navs: [...data.navs, item],
+      navs: [...data.navs, processedItem],
     };
     this.save(newData);
     return newData;
@@ -54,13 +57,43 @@ export const navDataManager = {
   /**
    * Update a navigation item at the specified index
    */
-  update(data: NavData, index: number, item: NavItem): NavData {
+  update(data: NavData, index: number, item: any): NavData {
+    const processedItem = this.processItem(item);
     const newData = {
       ...data,
-      navs: data.navs.map((nav, i) => (i === index ? item : nav)),
+      navs: data.navs.map((nav, i) => (i === index ? processedItem : nav)),
     };
     this.save(newData);
     return newData;
+  },
+
+  /**
+   * Process item to convert tags string to array
+   */
+  processItem(item: any): NavItem {
+    const processed: NavItem = {
+      name: item.name,
+      url: item.url,
+      icon: item.icon,
+    };
+    
+    if (item.localRepoPath) {
+      processed.localRepoPath = item.localRepoPath;
+    }
+    
+    if (item.tags) {
+      if (typeof item.tags === 'string') {
+        processed.tags = item.tags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag);
+      } else if (Array.isArray(item.tags)) {
+        processed.tags = item.tags;
+      }
+    }
+    
+    if (item.description) {
+      processed.description = item.description;
+    }
+    
+    return processed;
   },
 
   /**

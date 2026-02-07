@@ -32,7 +32,7 @@ import { navDataManager, type NavData } from "@/lib/nav-data";
 export default function Home() {
   const [data, setData] = useState<NavData | null>(null);
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", url: "", icon: "", localRepoPath: "" });
+  const [formData, setFormData] = useState({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [editMode, setEditMode] = useState(false);
@@ -49,7 +49,7 @@ export default function Home() {
 
     const newData = navDataManager.add(data, formData);
     setData(newData);
-    setFormData({ name: "", url: "", icon: "", localRepoPath: "" });
+    setFormData({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
     setOpen(false);
   };
 
@@ -72,6 +72,8 @@ export default function Home() {
         url: data!.navs[index].url,
         icon: data!.navs[index].icon,
         localRepoPath: data!.navs[index].localRepoPath || "",
+        tags: data!.navs[index].tags?.join(", ") || "",
+        description: data!.navs[index].description || "",
       });
       setEditOpen(true);
     }
@@ -82,7 +84,7 @@ export default function Home() {
 
     const newData = navDataManager.update(data, editIndex, formData);
     setData(newData);
-    setFormData({ name: "", url: "", icon: "", localRepoPath: "" });
+    setFormData({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
     setEditOpen(false);
     setEditIndex(null);
     setEditMode(false);
@@ -195,6 +197,24 @@ export default function Home() {
                     placeholder="/Users/username/repos/project"
                   />
                 </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="tags">Tags (comma-separated, optional)</Label>
+                  <Input
+                    id="tags"
+                    value={formData.tags}
+                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                    placeholder="ai, alibaba"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="description">Description (optional)</Label>
+                  <Input
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Brief overview of the item"
+                  />
+                </div>
               </div>
               <DialogFooter>
                 <Button onClick={handleAdd}>Add</Button>
@@ -237,6 +257,8 @@ export default function Home() {
                 url={nav.url}
                 icon={nav.icon}
                 localRepoPath={nav.localRepoPath}
+                tags={nav.tags}
+                description={nav.description}
                 onClick={() => handleNavItemClick(index)}
                 isDeleteMode={deleteMode || editMode}
               />
@@ -249,7 +271,7 @@ export default function Home() {
         setEditOpen(open);
         if (!open) {
           setEditIndex(null);
-          setFormData({ name: "", url: "", icon: "", localRepoPath: "" });
+          setFormData({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
         }
       }}>
         <DialogContent className="sm:max-w-[425px]">
@@ -294,6 +316,24 @@ export default function Home() {
                 value={formData.localRepoPath}
                 onChange={(e) => setFormData({ ...formData, localRepoPath: e.target.value })}
                 placeholder="/Users/username/repos/project"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-tags">Tags (comma-separated, optional)</Label>
+              <Input
+                id="edit-tags"
+                value={formData.tags}
+                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                placeholder="ai, alibaba"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-description">Description (optional)</Label>
+              <Input
+                id="edit-description"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                placeholder="Brief overview of the item"
               />
             </div>
           </div>
