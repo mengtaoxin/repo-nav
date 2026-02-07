@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { NavItem } from "@/components/nav-item";
 import defaultData from "@/resources/default-data.json";
 
 const STORAGE_KEY = "repo_nav_data_v1";
@@ -144,43 +145,13 @@ export default function DashboardPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {data.navs.map((nav, index) => (
-            <Card key={index} className="relative">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    {nav.icon && (
-                      <img
-                        src={nav.icon}
-                        alt={nav.name}
-                        className="h-8 w-8 rounded"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    )}
-                    <CardTitle className="text-lg">{nav.name}</CardTitle>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(index)}
-                    className="h-8 text-destructive hover:text-destructive"
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <a
-                  href={nav.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-                >
-                  {nav.url}
-                </a>
-              </CardContent>
-            </Card>
+            <NavItem
+              key={index}
+              name={nav.name}
+              url={nav.url}
+              icon={nav.icon}
+              onDelete={() => handleDelete(index)}
+            />
           ))}
         </div>
       )}
