@@ -15,6 +15,8 @@ interface NavItemProps {
   description?: string;
   onDetailClick?: () => void;
   isDeleteMode?: boolean;
+  isEditMode?: boolean;
+  isMoveMode?: boolean;
   onDragStart?: (e: React.DragEvent) => void;
   onDragOver?: (e: React.DragEvent) => void;
   onDrop?: (e: React.DragEvent) => void;
@@ -22,7 +24,7 @@ interface NavItemProps {
   tagConfig?: Tag[];
 }
 
-export function NavItem({ name, url, icon, localRepoPath, tags, description, onDetailClick, isDeleteMode, onDragStart, onDragOver, onDrop, draggable, tagConfig }: NavItemProps) {
+export function NavItem({ name, url, icon, localRepoPath, tags, description, onDetailClick, isDeleteMode, isEditMode, isMoveMode, onDragStart, onDragOver, onDrop, draggable, tagConfig }: NavItemProps) {
   // Check if icon is a local/data URL (use Next.js Image) or external URL (use img tag)
   const isLocalIcon = icon && (
     icon.startsWith('data:') || 
@@ -31,14 +33,17 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
     icon.startsWith('../')
   );
   const isExternalIcon = icon && (icon.startsWith('http://') || icon.startsWith('https://'));
-  const openDisabled = isDeleteMode || !localRepoPath;
-  const openDisabledReason = isDeleteMode
-    ? "Disabled in delete mode"
+  
+  // Disable interactions when in any mode (edit/delete/move)
+  const isInMode = isDeleteMode || isEditMode || isMoveMode;
+  const openDisabled = isInMode || !localRepoPath;
+  const openDisabledReason = isInMode
+    ? "Disabled in edit/delete/move mode"
     : !localRepoPath
       ? "Local repository path is missing"
       : undefined;
 
-  const cardClickHandler = isDeleteMode ? onDetailClick : undefined;
+  const cardClickHandler = isDeleteMode || isEditMode ? onDetailClick : undefined;
 
   // Helper function to get tag icon from config
   const getTagIcon = (tagName: string): string | undefined => {
@@ -123,14 +128,19 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
           )}
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                asChild
+                disabled={isInMode}
+              >
                 <a
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5"
                   onClick={(e) => {
-                    if (isDeleteMode) {
+                    if (isInMode) {
                       e.preventDefault();
                     }
                   }}
@@ -139,16 +149,15 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                   <span>URL</span>
                 </a>
               </Button>
-              {!isDeleteMode && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onDetailClick}
-                >
-                  <Info className="h-4 w-4" />
-                  <span>Details</span>
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={isInMode}
+                onClick={onDetailClick}
+              >
+                <Info className="h-4 w-4" />
+                <span>Details</span>
+              </Button>
             </div>
             <TooltipProvider>
               <Tooltip>
@@ -160,7 +169,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                       disabled={openDisabled}
                       onClick={(e) => {
                         e.stopPropagation();
-                        if (!localRepoPath || isDeleteMode) {
+                        if (!localRepoPath || isInMode) {
                           return;
                         }
                         window.location.href = `vscode://file/${localRepoPath}`;

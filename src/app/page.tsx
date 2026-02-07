@@ -222,7 +222,9 @@ export default function Home() {
                 tags={nav.tags}
                 description={nav.description}
                 onDetailClick={() => handleNavItemClick(index)}
-                isDeleteMode={deleteMode || editMode}
+                isDeleteMode={deleteMode}
+                isEditMode={editMode}
+                isMoveMode={moveMode}
                 draggable={moveMode}
                 onDragStart={handleDragStart(index)}
                 onDragOver={handleDragOver()}
