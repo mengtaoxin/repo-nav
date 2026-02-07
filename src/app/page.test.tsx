@@ -28,7 +28,7 @@ describe("Home page", () => {
   it("renders the headline", () => {
     render(<Home />);
     expect(
-      screen.getByText(/Manage your navigation links/i)
+      screen.getByText(/Repository Navigation/i)
     ).toBeInTheDocument();
   });
 
