@@ -10,7 +10,7 @@ interface NavItemProps {
   localRepoPath?: string;
   tags?: string[];
   description?: string;
-  onClick?: () => void;
+  onDetailClick?: () => void;
   isDeleteMode?: boolean;
   onDragStart?: (e: React.DragEvent) => void;
   onDragOver?: (e: React.DragEvent) => void;
@@ -18,7 +18,7 @@ interface NavItemProps {
   draggable?: boolean;
 }
 
-export function NavItem({ name, url, icon, localRepoPath, tags, description, onClick, isDeleteMode, onDragStart, onDragOver, onDrop, draggable }: NavItemProps) {
+export function NavItem({ name, url, icon, localRepoPath, tags, description, onDetailClick, isDeleteMode, onDragStart, onDragOver, onDrop, draggable }: NavItemProps) {
   // Check if icon is a local/data URL (use Next.js Image) or external URL (use img tag)
   const isLocalIcon = icon && (
     icon.startsWith('data:') || 
@@ -37,7 +37,6 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onC
   return (
     <Card 
       className={`relative transition-all ${isDeleteMode ? 'cursor-pointer hover:border-destructive hover:shadow-md' : ''} ${draggable ? 'cursor-move' : ''}`}
-      onClick={isDeleteMode ? onClick : undefined}
       draggable={draggable}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
@@ -114,37 +113,52 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onC
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-muted-foreground hover:text-foreground hover:underline flex-1 truncate"
-              onClick={(e) => isDeleteMode && e.preventDefault()}
+              onClick={(e) => {
+                if (isDeleteMode) {
+                  e.preventDefault();
+                }
+              }}
             >
               {url}
             </a>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <span className="inline-block">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={openDisabled}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (!localRepoPath || isDeleteMode) {
-                          return;
-                        }
-                        window.location.href = `vscode://file/${localRepoPath}`;
-                      }}
-                    >
-                      Open in VSCode
-                    </Button>
-                  </span>
-                </TooltipTrigger>
-                {openDisabledReason && (
-                  <TooltipContent>
-                    {openDisabledReason}
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            </TooltipProvider>
+            <div className="flex items-center gap-2">
+              {!isDeleteMode && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onDetailClick}
+                >
+                  Details
+                </Button>
+              )}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="inline-block">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={openDisabled}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!localRepoPath || isDeleteMode) {
+                            return;
+                          }
+                          window.location.href = `vscode://file/${localRepoPath}`;
+                        }}
+                      >
+                        Open in VSCode
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  {openDisabledReason && (
+                    <TooltipContent>
+                      {openDisabledReason}
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            </div>
           </div>
         </div>
       </CardContent>

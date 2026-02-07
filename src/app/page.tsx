@@ -26,17 +26,38 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { NavItem } from "@/components/nav-item";
+import { NavItemDetail, type NavItemDetailFormData } from "@/components/nav-item-detail";
 import { navDataManager, type NavData } from "@/lib/nav-data";
+
+const emptyFormData: NavItemDetailFormData = {
+  name: "",
+  url: "",
+  icon: "",
+  localRepoPath: "",
+  tags: "",
+  description: "",
+};
+
+const navToForm = (nav: NavData["navs"][number]): NavItemDetailFormData => ({
+  name: nav.name,
+  url: nav.url,
+  icon: nav.icon,
+  localRepoPath: nav.localRepoPath || "",
+  tags: nav.tags?.join(", ") || "",
+  description: nav.description || "",
+});
 
 export default function Home() {
   const [data, setData] = useState<NavData | null>(null);
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
+  const [formData, setFormData] = useState<NavItemDetailFormData>(emptyFormData);
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [detailIndex, setDetailIndex] = useState<number | null>(null);
   const [moveMode, setMoveMode] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
 
@@ -50,7 +71,7 @@ export default function Home() {
 
     const newData = navDataManager.add(data, formData);
     setData(newData);
-    setFormData({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
+    setFormData(emptyFormData);
     setOpen(false);
   };
 
@@ -66,18 +87,18 @@ export default function Home() {
   const handleNavItemClick = (index: number) => {
     if (deleteMode) {
       setDeleteIndex(index);
-    } else if (editMode) {
-      setEditIndex(index);
-      setFormData({
-        name: data!.navs[index].name,
-        url: data!.navs[index].url,
-        icon: data!.navs[index].icon,
-        localRepoPath: data!.navs[index].localRepoPath || "",
-        tags: data!.navs[index].tags?.join(", ") || "",
-        description: data!.navs[index].description || "",
-      });
-      setEditOpen(true);
+      return;
     }
+
+    if (editMode) {
+      setEditIndex(index);
+      setFormData(navToForm(data!.navs[index]));
+      setEditOpen(true);
+      return;
+    }
+
+    setDetailIndex(index);
+    setDetailOpen(true);
   };
 
   const handleEdit = () => {
@@ -85,7 +106,7 @@ export default function Home() {
 
     const newData = navDataManager.update(data, editIndex, formData);
     setData(newData);
-    setFormData({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
+    setFormData(emptyFormData);
     setEditOpen(false);
     setEditIndex(null);
     setEditMode(false);
@@ -117,6 +138,8 @@ export default function Home() {
       </div>
     );
   }
+
+  const detailFormData = detailIndex !== null ? navToForm(data.navs[detailIndex]) : emptyFormData;
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
@@ -275,7 +298,7 @@ export default function Home() {
                 localRepoPath={nav.localRepoPath}
                 tags={nav.tags}
                 description={nav.description}
-                onClick={() => handleNavItemClick(index)}
+                onDetailClick={() => handleNavItemClick(index)}
                 isDeleteMode={deleteMode || editMode}
                 draggable={moveMode}
                 onDragStart={handleDragStart(index)}
@@ -287,81 +310,32 @@ export default function Home() {
         </>
       )}
 
-      <Dialog open={editOpen} onOpenChange={(open) => {
-        setEditOpen(open);
-        if (!open) {
-          setEditIndex(null);
-          setFormData({ name: "", url: "", icon: "", localRepoPath: "", tags: "", description: "" });
-        }
-      }}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit Navigation Item</DialogTitle>
-            <DialogDescription>
-              Update the navigation link details.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-name">Name</Label>
-              <Input
-                id="edit-name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Example"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-url">URL</Label>
-              <Input
-                id="edit-url"
-                value={formData.url}
-                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                placeholder="https://www.example.com"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-icon">Icon URL</Label>
-              <Input
-                id="edit-icon"
-                value={formData.icon}
-                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                placeholder="https://www.example.com/favicon.ico"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-localRepoPath">Local Repo Path (Optional)</Label>
-              <Input
-                id="edit-localRepoPath"
-                value={formData.localRepoPath}
-                onChange={(e) => setFormData({ ...formData, localRepoPath: e.target.value })}
-                placeholder="/Users/username/repos/project"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-tags">Tags (comma-separated, optional)</Label>
-              <Input
-                id="edit-tags"
-                value={formData.tags}
-                onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                placeholder="ai, alibaba"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-description">Description (optional)</Label>
-              <Input
-                id="edit-description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Brief overview of the item"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button onClick={handleEdit}>Update</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <NavItemDetail
+        open={detailOpen}
+        onOpenChange={(open) => {
+          setDetailOpen(open);
+          if (!open) {
+            setDetailIndex(null);
+          }
+        }}
+        mode="view"
+        formData={detailFormData}
+      />
+
+      <NavItemDetail
+        open={editOpen}
+        onOpenChange={(open) => {
+          setEditOpen(open);
+          if (!open) {
+            setEditIndex(null);
+            setFormData(emptyFormData);
+          }
+        }}
+        mode="edit"
+        formData={formData}
+        onFieldChange={(field, value) => setFormData({ ...formData, [field]: value })}
+        onSubmit={handleEdit}
+      />
 
       <AlertDialog open={deleteIndex !== null} onOpenChange={(open) => !open && setDeleteIndex(null)}>
         <AlertDialogContent>
