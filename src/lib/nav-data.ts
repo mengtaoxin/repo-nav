@@ -51,7 +51,7 @@ export const navDataManager = {
   /**
    * Add a new navigation item
    */
-  add(data: NavData, item: Partial<NavItem> & { name: string; url: string; icon: string; tags?: string }): NavData {
+  add(data: NavData, item: { name: string; url: string; icon: string; localRepoPath?: string; tags?: string; description?: string; category?: string }): NavData {
     const processedItem = this.processItem(item);
     const newData = {
       ...data,
@@ -64,7 +64,7 @@ export const navDataManager = {
   /**
    * Update a navigation item at the specified index
    */
-  update(data: NavData, index: number, item: Partial<NavItem> & { name: string; url: string; icon: string; tags?: string }): NavData {
+  update(data: NavData, index: number, item: { name: string; url: string; icon: string; localRepoPath?: string; tags?: string; description?: string; category?: string }): NavData {
     const processedItem = this.processItem(item);
     const newData = {
       ...data,
@@ -174,9 +174,7 @@ export const navDataManager = {
     
     // Check if tag is used in any nav items
     const isUsed = data.navs.some(nav => 
-      nav.tags?.some(t => 
-        typeof t === 'string' ? t === tagToDelete.name : t.name === tagToDelete.name
-      )
+      nav.tags?.some(t => t === tagToDelete.name)
     );
     
     if (isUsed) {
@@ -196,9 +194,7 @@ export const navDataManager = {
    */
   getTagUsageCount(data: NavData, tagName: string): number {
     return data.navs.filter(nav => 
-      nav.tags?.some(t => 
-        typeof t === 'string' ? t === tagName : t.name === tagName
-      )
+      nav.tags?.some(t => t === tagName)
     ).length;
   },
 };

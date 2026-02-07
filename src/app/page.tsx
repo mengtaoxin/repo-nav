@@ -65,7 +65,15 @@ export default function Home() {
   const handleAdd = () => {
     if (!data || !formData.name || !formData.url) return;
 
-    const newData = navDataManager.add(data, formData);
+    const newData = navDataManager.add(data, {
+      name: formData.name,
+      url: formData.url,
+      icon: formData.icon,
+      localRepoPath: formData.localRepoPath,
+      tags: formData.tags,
+      description: formData.description,
+      category: formData.category,
+    });
     setData(newData);
     setFormData(emptyFormData);
     setOpen(false);
@@ -100,7 +108,15 @@ export default function Home() {
   const handleEdit = () => {
     if (!data || editIndex === null || !formData.name || !formData.url) return;
 
-    const newData = navDataManager.update(data, editIndex, formData);
+    const newData = navDataManager.update(data, editIndex, {
+      name: formData.name,
+      url: formData.url,
+      icon: formData.icon,
+      localRepoPath: formData.localRepoPath,
+      tags: formData.tags,
+      description: formData.description,
+      category: formData.category,
+    });
     setData(newData);
     setFormData(emptyFormData);
     setEditOpen(false);
