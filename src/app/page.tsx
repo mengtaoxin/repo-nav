@@ -38,6 +38,8 @@ export default function Home() {
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const [moveMode, setMoveMode] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
 
   // Load data only on client side to avoid hydration mismatch
   useEffect(() => {
@@ -95,6 +97,25 @@ export default function Home() {
     setData(newData);
   };
 
+  const handleDragStart = (index: number) => (e: React.DragEvent) => {
+    setDragIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (index: number) => (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (toIndex: number) => (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!data || dragIndex === null || dragIndex === toIndex) return;
+
+    const newData = navDataManager.reorder(data, dragIndex, toIndex);
+    setData(newData);
+    setDragIndex(null);
+  };
+
   if (!data) {
     return (
       <div className="mx-auto max-w-5xl px-6 py-8">
@@ -118,6 +139,7 @@ export default function Home() {
             onClick={() => {
               setEditMode(!editMode);
               setDeleteMode(false);
+              setMoveMode(false);
             }}
           >
             {editMode ? "Cancel Edit" : "Edit"}
@@ -127,9 +149,20 @@ export default function Home() {
             onClick={() => {
               setDeleteMode(!deleteMode);
               setEditMode(false);
+              setMoveMode(false);
             }}
           >
             {deleteMode ? "Cancel Delete" : "Delete"}
+          </Button>
+          <Button 
+            variant={moveMode ? "default" : "outline"}
+            onClick={() => {
+              setMoveMode(!moveMode);
+              setDeleteMode(false);
+              setEditMode(false);
+            }}
+          >
+            {moveMode ? "Cancel Move" : "Move"}
           </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -249,6 +282,13 @@ export default function Home() {
               </p>
             </div>
           )}
+          {moveMode && (
+            <div className="mb-4 rounded-lg border border-blue-500 bg-blue-500/10 p-4">
+              <p className="text-sm text-blue-500 font-medium">
+                Move mode is active. Drag and drop navigation items to reorder them.
+              </p>
+            </div>
+          )}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {data.navs.map((nav, index) => (
               <NavItem
@@ -261,6 +301,10 @@ export default function Home() {
                 description={nav.description}
                 onClick={() => handleNavItemClick(index)}
                 isDeleteMode={deleteMode || editMode}
+                draggable={moveMode}
+                onDragStart={handleDragStart(index)}
+                onDragOver={handleDragOver(index)}
+                onDrop={handleDrop(index)}
               />
             ))}
           </div>

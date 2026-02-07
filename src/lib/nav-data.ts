@@ -109,6 +109,22 @@ export const navDataManager = {
   },
 
   /**
+   * Reorder navigation items
+   */
+  reorder(data: NavData, fromIndex: number, toIndex: number): NavData {
+    const newNavs = [...data.navs];
+    const [movedItem] = newNavs.splice(fromIndex, 1);
+    newNavs.splice(toIndex, 0, movedItem);
+    
+    const newData = {
+      ...data,
+      navs: newNavs,
+    };
+    this.save(newData);
+    return newData;
+  },
+
+  /**
    * Reset data to default
    */
   reset(): NavData {

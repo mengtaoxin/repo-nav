@@ -11,9 +11,13 @@ interface NavItemProps {
   description?: string;
   onClick?: () => void;
   isDeleteMode?: boolean;
+  onDragStart?: (e: React.DragEvent) => void;
+  onDragOver?: (e: React.DragEvent) => void;
+  onDrop?: (e: React.DragEvent) => void;
+  draggable?: boolean;
 }
 
-export function NavItem({ name, url, icon, localRepoPath, tags, description, onClick, isDeleteMode }: NavItemProps) {
+export function NavItem({ name, url, icon, localRepoPath, tags, description, onClick, isDeleteMode, onDragStart, onDragOver, onDrop, draggable }: NavItemProps) {
   // Check if icon is a local/data URL (use Next.js Image) or external URL (use img tag)
   const isLocalIcon = icon && (
     icon.startsWith('data:') || 
@@ -25,12 +29,31 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onC
 
   return (
     <Card 
-      className={`relative transition-all ${isDeleteMode ? 'cursor-pointer hover:border-destructive hover:shadow-md' : ''}`}
+      className={`relative transition-all ${isDeleteMode ? 'cursor-pointer hover:border-destructive hover:shadow-md' : ''} ${draggable ? 'cursor-move' : ''}`}
       onClick={isDeleteMode ? onClick : undefined}
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
     >
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
+            {draggable && !isDeleteMode && (
+              <svg
+                className="w-5 h-5 text-muted-foreground flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 8h16M4 16h16"
+                />
+              </svg>
+            )}
             {isLocalIcon && (
               <Image
                 src={icon}
