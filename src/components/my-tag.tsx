@@ -1,4 +1,5 @@
 import * as React from "react";
+import { configManager } from "@/lib/config-manager";
 
 interface MyTagProps {
   name: string;
@@ -34,7 +35,9 @@ function stringToColorClass(str: string): string {
 }
 
 export function MyTag({ name, icon, disabled }: MyTagProps) {
-  const colorClass = icon ? undefined : stringToColorClass(name);
+  // Only apply color if icon is not provided and enable-tag-color is true
+  const enableTagColor = configManager.getEnableTagColor();
+  const colorClass = (icon || !enableTagColor) ? undefined : stringToColorClass(name);
   
   return (
     <span

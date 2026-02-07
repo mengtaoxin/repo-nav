@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -17,6 +18,7 @@ import { configManager, type Theme } from "@/lib/config-manager";
 export default function Settings() {
   const [data, setData] = useState<NavData | null>(null);
   const [theme, setTheme] = useState<Theme>("default");
+  const [enableTagColor, setEnableTagColor] = useState<boolean>(true);
 
   // Load data and theme on client side
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function Settings() {
         setData(loadedData);
       }
       setTheme(configManager.getTheme());
+      setEnableTagColor(configManager.getEnableTagColor());
     };
     loadSettings();
   }, []);
@@ -33,6 +36,12 @@ export default function Settings() {
   const handleThemeChange = (newTheme: Theme) => {
     setTheme(newTheme);
     configManager.setTheme(newTheme);
+  };
+
+  const handleTagColorToggle = () => {
+    const newValue = !enableTagColor;
+    setEnableTagColor(newValue);
+    configManager.setEnableTagColor(newValue);
   };
 
   return (
@@ -70,6 +79,26 @@ export default function Settings() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tag Color Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Tag Colors</CardTitle>
+            <CardDescription>
+              Enable or disable dynamic colors for tags
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="tag-color-toggle">Enable tag colors</Label>
+              <Switch
+                id="tag-color-toggle"
+                checked={enableTagColor}
+                onCheckedChange={handleTagColorToggle}
+              />
             </div>
           </CardContent>
         </Card>

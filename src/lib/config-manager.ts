@@ -7,6 +7,7 @@ export type Theme = "default" | "dark" | "light";
 export interface AppConfig {
   version: string;
   theme: Theme;
+  "enable-tag-color": boolean;
 }
 
 export const configManager = {
@@ -74,5 +75,23 @@ export const configManager = {
       // light is the default, no need to add a class
     }
     // default theme doesn't require any class changes
+  },
+
+  /**
+   * Get enable-tag-color setting
+   */
+  getEnableTagColor(): boolean {
+    const config = this.load();
+    return config["enable-tag-color"];
+  },
+
+  /**
+   * Set enable-tag-color setting
+   */
+  setEnableTagColor(enabled: boolean): AppConfig {
+    const config = this.load();
+    const updated = { ...config, "enable-tag-color": enabled };
+    this.save(updated);
+    return updated;
   },
 };
