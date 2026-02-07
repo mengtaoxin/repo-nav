@@ -7,9 +7,11 @@ import { navDataManager, type NavData } from "@/lib/nav-data";
 interface DataManagerProps {
   onDataImported: (data: NavData) => void;
   currentData: NavData | null;
+  exportOnly?: boolean;
+  importOnly?: boolean;
 }
 
-export function DataManager({ onDataImported, currentData }: DataManagerProps) {
+export function DataManager({ onDataImported, currentData, exportOnly, importOnly }: DataManagerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
@@ -61,12 +63,16 @@ export function DataManager({ onDataImported, currentData }: DataManagerProps) {
 
   return (
     <>
-      <Button variant="outline" onClick={handleExport}>
-        Export Data
-      </Button>
-      <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-        Import Data
-      </Button>
+      {!importOnly && (
+        <Button variant="outline" onClick={handleExport}>
+          Export Data
+        </Button>
+      )}
+      {!exportOnly && (
+        <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
+          Import Data
+        </Button>
+      )}
       <input
         ref={fileInputRef}
         type="file"
