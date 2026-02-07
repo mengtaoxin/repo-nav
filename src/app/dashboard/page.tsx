@@ -14,6 +14,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { NavItem } from "@/components/nav-item";
 import defaultData from "@/resources/default-data.json";
 
@@ -69,6 +80,11 @@ export default function DashboardPage() {
     setData(newData);
   };
 
+  const handleReset = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
+    setData(defaultData as NavData);
+  };
+
   if (!data) {
     return (
       <div className="mx-auto max-w-5xl px-6 py-8">
@@ -86,7 +102,25 @@ export default function DashboardPage() {
             Manage your navigation links
           </p>
         </div>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <div className="flex gap-2">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline">Reset</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will reset all navigation items to the default data. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>Add Navigation</Button>
           </DialogTrigger>
@@ -131,6 +165,7 @@ export default function DashboardPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {data.navs.length === 0 ? (
