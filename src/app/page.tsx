@@ -1,71 +1,196 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { NavItem } from "@/components/nav-item";
+import defaultData from "@/resources/default-data.json";
+
+const STORAGE_KEY = "repo_nav_data_v1";
+
+interface NavItem {
+  name: string;
+  url: string;
+  icon: string;
+}
+
+interface NavData {
+  version: string;
+  navs: NavItem[];
+}
 
 export default function Home() {
+  const [data, setData] = useState<NavData | null>(null);
+  const [open, setOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: "", url: "", icon: "" });
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      setData(JSON.parse(stored));
+    } else {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
+      setData(defaultData as NavData);
+    }
+  }, []);
+
+  const handleAdd = () => {
+    if (!data || !formData.name || !formData.url) return;
+
+    const newData = {
+      ...data,
+      navs: [...data.navs, formData],
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+    setData(newData);
+    setFormData({ name: "", url: "", icon: "" });
+    setOpen(false);
+  };
+
+  const handleDelete = (index: number) => {
+    if (!data) return;
+
+    const newData = {
+      ...data,
+      navs: data.navs.filter((_, i) => i !== index),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+    setData(newData);
+  };
+
+  const handleReset = () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
+    setData(defaultData as NavData);
+  };
+
+  if (!data) {
+    return (
+      <div className="mx-auto max-w-5xl px-6 py-8">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-6 py-16">
-      <section className="flex flex-col gap-6">
-        <p className="text-sm font-medium uppercase tracking-[0.3em] text-muted-foreground">
-          Next.js + shadcn/ui
-        </p>
-        <div className="space-y-4">
-          <h1 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            Navigate repositories, ship updates, and keep your team aligned.
-          </h1>
-          <p className="max-w-2xl text-lg text-muted-foreground">
-            This starter includes a basic app shell, Tailwind, and shadcn/ui components so
-            you can start building your product experience immediately.
+    <div className="mx-auto max-w-5xl px-6 py-8">
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <p className="mt-2 text-muted-foreground">
+            Manage your navigation links
           </p>
         </div>
-        <div className="flex flex-wrap gap-4">
-          <Button size="lg">Create workspace</Button>
-          <Button size="lg" variant="outline">
-            View docs
-          </Button>
+        <div className="flex gap-2">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline">Reset</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will reset all navigation items to the default data. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleReset}>Reset</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button>Add Navigation</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Add Navigation Item</DialogTitle>
+                <DialogDescription>
+                  Add a new navigation link to your dashboard.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Example"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="url">URL</Label>
+                  <Input
+                    id="url"
+                    value={formData.url}
+                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                    placeholder="https://www.example.com"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="icon">Icon URL</Label>
+                  <Input
+                    id="icon"
+                    value={formData.icon}
+                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                    placeholder="https://www.example.com/favicon.ico"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={handleAdd}>Add</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
-      </section>
+      </div>
 
-      <section className="grid gap-6 md:grid-cols-3">
-        {[
-          {
-            title: "Unified repo tracking",
-            description:
-              "Track active branches, issues, and reviews with a single unified view.",
-          },
-          {
-            title: "Smart navigation",
-            description:
-              "Jump directly to the next task with contextual search and filters.",
-          },
-          {
-            title: "Team visibility",
-            description:
-              "Share progress updates and keep stakeholders in the loop instantly.",
-          },
-        ].map((card) => (
-          <div
-            key={card.title}
-            className="flex flex-col gap-3 rounded-2xl border bg-card p-6 shadow-sm"
-          >
-            <h2 className="text-lg font-semibold">{card.title}</h2>
-            <p className="text-sm text-muted-foreground">{card.description}</p>
-          </div>
-        ))}
-      </section>
-
-      <section className="rounded-2xl border bg-muted/40 p-6">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h3 className="text-lg font-semibold">Ready for your first module?</h3>
-            <p className="text-sm text-muted-foreground">
-              Add more shadcn/ui components with a single command.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Button variant="secondary">Add components</Button>
-            <Button variant="ghost">Learn patterns</Button>
-          </div>
+      {data.navs.length === 0 ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>No Navigation Items</CardTitle>
+            <CardDescription>
+              Get started by adding your first navigation link.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {data.navs.map((nav, index) => (
+            <NavItem
+              key={index}
+              name={nav.name}
+              url={nav.url}
+              icon={nav.icon}
+              onDelete={() => handleDelete(index)}
+            />
+          ))}
         </div>
-      </section>
+      )}
     </div>
   );
 }
+
