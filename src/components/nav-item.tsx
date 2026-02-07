@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { MyTag } from "@/components/my-tag";
 import Image from "next/image";
 import { Code, Info, Link } from "lucide-react";
+import type { Tag } from "@/lib/nav-data";
 
 interface NavItemProps {
   name: string;
@@ -17,9 +19,10 @@ interface NavItemProps {
   onDragOver?: (e: React.DragEvent) => void;
   onDrop?: (e: React.DragEvent) => void;
   draggable?: boolean;
+  tagConfig?: Tag[];
 }
 
-export function NavItem({ name, url, icon, localRepoPath, tags, description, onDetailClick, isDeleteMode, onDragStart, onDragOver, onDrop, draggable }: NavItemProps) {
+export function NavItem({ name, url, icon, localRepoPath, tags, description, onDetailClick, isDeleteMode, onDragStart, onDragOver, onDrop, draggable, tagConfig }: NavItemProps) {
   // Check if icon is a local/data URL (use Next.js Image) or external URL (use img tag)
   const isLocalIcon = icon && (
     icon.startsWith('data:') || 
@@ -36,6 +39,11 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
       : undefined;
 
   const cardClickHandler = isDeleteMode ? onDetailClick : undefined;
+
+  // Helper function to get tag icon from config
+  const getTagIcon = (tagName: string): string | undefined => {
+    return tagConfig?.find(t => t.name === tagName)?.icon;
+  };
 
   return (
     <Card 
@@ -101,14 +109,16 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
           )}
           {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
-              {tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center rounded-md bg-primary/10 px-2 py-1 text-xs font-medium text-primary"
-                >
-                  {tag}
-                </span>
-              ))}
+              {tags.map((tag, index) => {
+                const iconUrl = getTagIcon(tag);
+                return (
+                  <MyTag
+                    key={index}
+                    name={tag}
+                    icon={iconUrl ? <img src={iconUrl} alt="" className="w-4 h-4 rounded" /> : undefined}
+                  />
+                );
+              })}
             </div>
           )}
           <div className="flex flex-col gap-2">

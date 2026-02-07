@@ -222,6 +222,7 @@ export default function Home() {
                 onDragStart={handleDragStart(index)}
                 onDragOver={handleDragOver(index)}
                 onDrop={handleDrop(index)}
+                tagConfig={data.tags}
               />
             ))}
           </div>

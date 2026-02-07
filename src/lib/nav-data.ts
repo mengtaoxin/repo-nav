@@ -2,6 +2,11 @@ import defaultData from "@/resources/default-data.json";
 
 const STORAGE_KEY = "repo_nav_data_v1";
 
+export interface Tag {
+  name: string;
+  icon?: string;
+}
+
 export interface NavItem {
   name: string;
   url: string;
