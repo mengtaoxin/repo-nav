@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Image from "next/image";
-import { Link } from "lucide-react";
+import { Code, Info, Link } from "lucide-react";
 
 interface NavItemProps {
   name: string;
@@ -135,7 +135,8 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                   size="sm"
                   onClick={onDetailClick}
                 >
-                  Details
+                  <Info className="h-4 w-4" />
+                  <span>Details</span>
                 </Button>
               )}
               <TooltipProvider>
@@ -154,7 +155,8 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                           window.location.href = `vscode://file/${localRepoPath}`;
                         }}
                       >
-                        Open in VSCode
+                        <Code className="h-4 w-4" />
+                        <span>Open in VSCode</span>
                       </Button>
                     </span>
                   </TooltipTrigger>
