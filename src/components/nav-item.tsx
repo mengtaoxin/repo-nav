@@ -34,9 +34,12 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
       ? "Local repo path is missing"
       : undefined;
 
+  const cardClickHandler = isDeleteMode ? onDetailClick : undefined;
+
   return (
     <Card 
       className={`relative transition-all ${isDeleteMode ? 'cursor-pointer hover:border-destructive hover:shadow-md' : ''} ${draggable ? 'cursor-move' : ''}`}
+      onClick={cardClickHandler}
       draggable={draggable}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
