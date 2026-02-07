@@ -128,27 +128,32 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
           )}
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                asChild
-                disabled={isInMode}
-              >
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5"
-                  onClick={(e) => {
-                    if (isInMode) {
-                      e.preventDefault();
-                    }
-                  }}
+              {isInMode ? (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  disabled
                 >
                   <Link className="h-4 w-4 flex-shrink-0" />
                   <span>URL</span>
-                </a>
-              </Button>
+                </Button>
+              ) : (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  asChild
+                >
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5"
+                  >
+                    <Link className="h-4 w-4 flex-shrink-0" />
+                    <span>URL</span>
+                  </a>
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
