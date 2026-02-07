@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Image from "next/image";
 
 interface NavItemProps {
@@ -26,6 +27,12 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onC
     icon.startsWith('../')
   );
   const isExternalIcon = icon && (icon.startsWith('http://') || icon.startsWith('https://'));
+  const openDisabled = isDeleteMode || !localRepoPath;
+  const openDisabledReason = isDeleteMode
+    ? "Disabled in delete mode"
+    : !localRepoPath
+      ? "Local repo path is missing"
+      : undefined;
 
   return (
     <Card 
@@ -111,18 +118,33 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onC
             >
               {url}
             </a>
-            {localRepoPath && !isDeleteMode && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.location.href = `vscode://file/${localRepoPath}`;
-                }}
-              >
-                Open in VSCode
-              </Button>
-            )}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-block">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={openDisabled}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!localRepoPath || isDeleteMode) {
+                          return;
+                        }
+                        window.location.href = `vscode://file/${localRepoPath}`;
+                      }}
+                    >
+                      Open in VSCode
+                    </Button>
+                  </span>
+                </TooltipTrigger>
+                {openDisabledReason && (
+                  <TooltipContent>
+                    {openDisabledReason}
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </CardContent>
