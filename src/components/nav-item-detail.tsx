@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { isValidUrl, isValidUrlOrEmpty } from "@/lib/validator";
+import { isValidUrl, isValidUrlOrEmpty, isValidFileSystemPath } from "@/lib/validator";
 
 export interface NavItemDetailFormData {
   name: string;
@@ -56,7 +56,8 @@ export function NavItemDetail({
   // Validate URLs
   const isUrlValid = isValidUrl(formData.url);
   const isIconUrlValid = isValidUrlOrEmpty(formData.icon);
-  const isFormValid = isUrlValid && isIconUrlValid && formData.name.trim() !== "";
+  const isLocalRepoPathValid = isValidFileSystemPath(formData.localRepoPath);
+  const isFormValid = isUrlValid && isIconUrlValid && isLocalRepoPathValid && formData.name.trim() !== "";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -116,7 +117,11 @@ export function NavItemDetail({
               placeholder="/Users/username/repos/project"
               disabled={!isEditable}
               readOnly={!isEditable}
+              className={!isEditable ? "" : !isLocalRepoPathValid && formData.localRepoPath ? "border-red-500" : ""}
             />
+            {isEditable && !isLocalRepoPathValid && formData.localRepoPath && (
+              <p className="text-sm text-red-500">Please enter a valid absolute path</p>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="detail-tags">Tags (comma-separated, optional)</Label>
