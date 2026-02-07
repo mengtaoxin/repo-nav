@@ -81,7 +81,7 @@ export function NavItemDetail({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="detail-icon">Icon URL</Label>
+            <Label htmlFor="detail-icon">Icon URL (Optional)</Label>
             <Input
               id="detail-icon"
               value={formData.icon}
