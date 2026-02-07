@@ -24,6 +24,7 @@ const emptyFormData: NavItemDetailFormData = {
   localRepoPath: "",
   tags: "",
   description: "",
+  category: "uncategorized",
 };
 
 const navToForm = (nav: NavData["navs"][number]): NavItemDetailFormData => ({
@@ -33,6 +34,7 @@ const navToForm = (nav: NavData["navs"][number]): NavItemDetailFormData => ({
   localRepoPath: nav.localRepoPath || "",
   tags: nav.tags?.join(", ") || "",
   description: nav.description || "",
+  category: nav.category || "uncategorized",
 });
 
 export default function Home() {
@@ -135,6 +137,23 @@ export default function Home() {
 
   const detailFormData = detailIndex !== null ? navToForm(data.navs[detailIndex]) : emptyFormData;
 
+  // Group navigation items by category
+  const groupedNavs = data.navs.reduce((acc, nav, index) => {
+    const category = nav.category || "uncategorized";
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push({ nav, index });
+    return acc;
+  }, {} as Record<string, Array<{ nav: typeof data.navs[0]; index: number }>>);
+
+  // Sort categories: uncategorized first, then others alphabetically
+  const sortedCategories = Object.keys(groupedNavs).sort((a, b) => {
+    if (a === "uncategorized") return -1;
+    if (b === "uncategorized") return 1;
+    return a.localeCompare(b);
+  });
+
   return (
     <div className="px-6 py-8">
       <div className="mb-8 flex items-center justify-between">
@@ -211,28 +230,35 @@ export default function Home() {
               </p>
             </div>
           )}
-          <div className="flex flex-wrap gap-2">
-            {data.navs.map((nav, index) => (
-              <NavItem
-                key={index}
-                name={nav.name}
-                url={nav.url}
-                icon={nav.icon}
-                localRepoPath={nav.localRepoPath}
-                tags={nav.tags}
-                description={nav.description}
-                onDetailClick={() => handleNavItemClick(index)}
-                isDeleteMode={deleteMode}
-                isEditMode={editMode}
-                isMoveMode={moveMode}
-                draggable={moveMode}
-                onDragStart={handleDragStart(index)}
-                onDragOver={handleDragOver()}
-                onDrop={handleDrop(index)}
-                tagConfig={data.tags}
-              />
-            ))}
-          </div>
+          {sortedCategories.map((category) => (
+            <div key={category} className="mb-6">
+              <h2 className="mb-3 text-lg font-semibold capitalize text-foreground">
+                {category === "uncategorized" ? "Uncategorized" : category}
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {groupedNavs[category].map(({ nav, index }) => (
+                  <NavItem
+                    key={index}
+                    name={nav.name}
+                    url={nav.url}
+                    icon={nav.icon}
+                    localRepoPath={nav.localRepoPath}
+                    tags={nav.tags}
+                    description={nav.description}
+                    onDetailClick={() => handleNavItemClick(index)}
+                    isDeleteMode={deleteMode}
+                    isEditMode={editMode}
+                    isMoveMode={moveMode}
+                    draggable={moveMode}
+                    onDragStart={handleDragStart(index)}
+                    onDragOver={handleDragOver()}
+                    onDrop={handleDrop(index)}
+                    tagConfig={data.tags}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </>
       )}
 

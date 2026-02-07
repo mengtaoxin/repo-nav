@@ -14,6 +14,7 @@ export interface NavItem {
   localRepoPath?: string;
   tags?: string[];
   description?: string;
+  category?: string;
 }
 
 export interface NavData {
@@ -74,13 +75,14 @@ export const navDataManager = {
   },
 
   /**
-   * Process item to convert tags string to array
+   * Process item to convert tags string to array and ensure category has a default
    */
-  processItem(item: { name: string; url: string; icon: string; localRepoPath?: string; tags?: string | string[]; description?: string }): NavItem {
+  processItem(item: { name: string; url: string; icon: string; localRepoPath?: string; tags?: string | string[]; description?: string; category?: string }): NavItem {
     const processed: NavItem = {
       name: item.name,
       url: item.url,
       icon: item.icon,
+      category: item.category || "uncategorized",
     };
     
     if (item.localRepoPath) {

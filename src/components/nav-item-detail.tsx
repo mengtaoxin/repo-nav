@@ -21,6 +21,7 @@ export interface NavItemDetailFormData {
   localRepoPath: string;
   tags: string;
   description: string;
+  category: string;
 }
 
 interface NavItemDetailProps {
@@ -122,6 +123,17 @@ export function NavItemDetail({
             {isEditable && !isLocalRepoPathValid && formData.localRepoPath && (
               <p className="text-sm text-red-500">Please enter a valid absolute path</p>
             )}
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="detail-category">Category (optional)</Label>
+            <Input
+              id="detail-category"
+              value={formData.category}
+              onChange={handleChange("category")}
+              placeholder="uncategorized"
+              disabled={!isEditable}
+              readOnly={!isEditable}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="detail-tags">Tags (comma-separated, optional)</Label>
