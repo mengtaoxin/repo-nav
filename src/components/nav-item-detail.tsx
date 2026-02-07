@@ -41,7 +41,7 @@ export function NavItemDetail({
   onSubmit,
 }: NavItemDetailProps) {
   const isEditable = mode === "edit" || mode === "add";
-  const title = mode === "add" ? "Add" : mode === "edit" ? "Edit Navigation Item" : "Navigation Details";
+  const title = mode === "add" ? "Add" : mode === "edit" ? "Edit" : "Navigation Details";
   const description = mode === "add"
     ? "Add a new navigation link to your dashboard."
     : mode === "edit"
@@ -109,7 +109,7 @@ export function NavItemDetail({
             )}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="detail-localRepoPath">Local Repo Path (Optional)</Label>
+            <Label htmlFor="detail-localRepoPath">Local Repository Path (Optional)</Label>
             <Input
               id="detail-localRepoPath"
               value={formData.localRepoPath}

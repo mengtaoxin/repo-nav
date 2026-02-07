@@ -32,7 +32,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
   const openDisabledReason = isDeleteMode
     ? "Disabled in delete mode"
     : !localRepoPath
-      ? "Local repo path is missing"
+      ? "Local repository path is missing"
       : undefined;
 
   const cardClickHandler = isDeleteMode ? onDetailClick : undefined;

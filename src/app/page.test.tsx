@@ -41,7 +41,7 @@ describe("Home page", () => {
     await user.click(screen.getByRole("button", { name: "Edit" }));
     fireEvent.click(screen.getByText("Alpha"));
 
-    await screen.findByText("Edit Navigation Item");
+    await screen.findByText("Edit");
 
     const nameInput = screen.getByLabelText(/Name/i);
     await user.clear(nameInput);
