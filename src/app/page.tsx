@@ -134,9 +134,9 @@ export default function Home() {
     <div className="mx-auto max-w-5xl px-6 py-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Repository Navigation</h1>
           <p className="mt-2 text-muted-foreground">
-            Manage your navigation links
+            Shortcuts for Repositories
           </p>
         </div>
         <div className="flex gap-2">
@@ -170,7 +170,7 @@ export default function Home() {
           >
             {moveMode ? "Cancel Move" : "Move"}
           </Button>
-          <Button onClick={() => setOpen(true)}>Add Navigation</Button>
+          <Button onClick={() => setOpen(true)}>Add</Button>
         </div>
       </div>
 
