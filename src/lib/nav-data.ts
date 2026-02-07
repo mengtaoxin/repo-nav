@@ -50,7 +50,7 @@ export const navDataManager = {
   /**
    * Add a new navigation item
    */
-  add(data: NavData, item: any): NavData {
+  add(data: NavData, item: Partial<NavItem> & { name: string; url: string; icon: string; tags?: string }): NavData {
     const processedItem = this.processItem(item);
     const newData = {
       ...data,
@@ -63,7 +63,7 @@ export const navDataManager = {
   /**
    * Update a navigation item at the specified index
    */
-  update(data: NavData, index: number, item: any): NavData {
+  update(data: NavData, index: number, item: Partial<NavItem> & { name: string; url: string; icon: string; tags?: string }): NavData {
     const processedItem = this.processItem(item);
     const newData = {
       ...data,
@@ -76,7 +76,7 @@ export const navDataManager = {
   /**
    * Process item to convert tags string to array
    */
-  processItem(item: any): NavItem {
+  processItem(item: { name: string; url: string; icon: string; localRepoPath?: string; tags?: string | string[]; description?: string }): NavItem {
     const processed: NavItem = {
       name: item.name,
       url: item.url,

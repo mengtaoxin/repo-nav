@@ -12,7 +12,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { NavItem } from "@/components/nav-item";
 import { NavItemDetail, type NavItemDetailFormData } from "@/components/nav-item-detail";
@@ -52,7 +51,13 @@ export default function Home() {
 
   // Load data only on client side to avoid hydration mismatch
   useEffect(() => {
-    setData(navDataManager.load());
+    const loadData = () => {
+      const loadedData = navDataManager.load();
+      if (loadedData) {
+        setData(loadedData);
+      }
+    };
+    loadData();
   }, []);
 
   const handleAdd = () => {
@@ -106,7 +111,7 @@ export default function Home() {
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDragOver = (index: number) => (e: React.DragEvent) => {
+  const handleDragOver = () => (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
@@ -220,7 +225,7 @@ export default function Home() {
                 isDeleteMode={deleteMode || editMode}
                 draggable={moveMode}
                 onDragStart={handleDragStart(index)}
-                onDragOver={handleDragOver(index)}
+                onDragOver={handleDragOver()}
                 onDrop={handleDrop(index)}
                 tagConfig={data.tags}
               />

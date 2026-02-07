@@ -44,7 +44,13 @@ export default function TagsPage() {
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    setData(navDataManager.load());
+    const loadData = () => {
+      const loadedData = navDataManager.load();
+      if (loadedData) {
+        setData(loadedData);
+      }
+    };
+    loadData();
   }, []);
 
   const tags = data?.tags || [];

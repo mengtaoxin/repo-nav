@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import {
@@ -21,8 +20,14 @@ export default function Settings() {
 
   // Load data and theme on client side
   useEffect(() => {
-    setData(navDataManager.load());
-    setTheme(configManager.getTheme());
+    const loadSettings = () => {
+      const loadedData = navDataManager.load();
+      if (loadedData) {
+        setData(loadedData);
+      }
+      setTheme(configManager.getTheme());
+    };
+    loadSettings();
   }, []);
 
   const handleThemeChange = (newTheme: Theme) => {
