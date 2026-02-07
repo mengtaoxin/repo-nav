@@ -10,6 +10,14 @@ interface NavItemProps {
 }
 
 export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps) {
+  // Check if icon is a valid data URL or relative path
+  const isValidIcon = icon && (
+    icon.startsWith('data:') || 
+    icon.startsWith('/') || 
+    icon.startsWith('./') ||
+    icon.startsWith('../')
+  );
+
   return (
     <Card 
       className={`relative transition-all ${isDeleteMode ? 'cursor-pointer hover:border-destructive hover:shadow-md' : ''}`}
@@ -18,7 +26,7 @@ export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            {icon && (
+            {isValidIcon && (
               <Image
                 src={icon}
                 alt={name}
