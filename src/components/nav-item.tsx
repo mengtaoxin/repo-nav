@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 
 interface NavItemProps {
   name: string;
@@ -18,10 +19,12 @@ export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             {icon && (
-              <img
+              <Image
                 src={icon}
                 alt={name}
-                className="h-8 w-8 rounded"
+                width={32}
+                height={32}
+                className="rounded"
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
                 }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,10 +26,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { NavItem } from "@/components/nav-item";
-import { navDataManager, type NavData, type NavItem as NavItemType } from "@/lib/nav-data";
+import { navDataManager, type NavData } from "@/lib/nav-data";
 
 export default function Home() {
-  const [data, setData] = useState<NavData | null>(null);
+  const [data, setData] = useState<NavData | null>(() => navDataManager.load());
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", url: "", icon: "" });
   const [deleteMode, setDeleteMode] = useState(false);
@@ -37,24 +37,6 @@ export default function Home() {
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      setData(JSON.parse(stored));
-    } else {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
-      setData(defaultData as NavData);
-    }
-  }, []);
-
-  const handleAdd = () => {
-    if (!data || !formData.name || !formData.url) return;
-
-    const newData = {
-      ...dloadedData = navDataManager.load();
-    setData(loadedData);
-  }, []);
 
   const handleAdd = () => {
     if (!data || !formData.name || !formData.url) return;
@@ -68,7 +50,20 @@ export default function Home() {
   const handleDeleteConfirm = () => {
     if (!data || deleteIndex === null) return;
 
-    const newData = navDataManager.delete(data, deleteIndex
+    const newData = navDataManager.delete(data, deleteIndex);
+    setData(newData);
+    setDeleteIndex(null);
+    setDeleteMode(false);
+  };
+
+  const handleNavItemClick = (index: number) => {
+    if (deleteMode) {
+      setDeleteIndex(index);
+    } else if (editMode) {
+      setEditIndex(index);
+      setFormData({
+        name: data!.navs[index].name,
+        url: data!.navs[index].url,
         icon: data!.navs[index].icon,
       });
       setEditOpen(true);
@@ -78,20 +73,7 @@ export default function Home() {
   const handleEdit = () => {
     if (!data || editIndex === null || !formData.name || !formData.url) return;
 
-    const newData = {
-      ...data,
-      navs: data.navs.map((nav, i) => 
-        i === editIndex ? formData : nav
-      ),
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
-    setData(newData);
-    setFormData({ name: "", url: "", icon: "" });
-    setEditOpen(false);
-    setEditIndex(null);
-    setEditMode(false);
-  };
-navDataManager.update(data, editIndex, formData);
+    const newData = navDataManager.update(data, editIndex, formData);
     setData(newData);
     setFormData({ name: "", url: "", icon: "" });
     setEditOpen(false);
@@ -101,7 +83,20 @@ navDataManager.update(data, editIndex, formData);
 
   const handleReset = () => {
     const newData = navDataManager.reset();
-    setData(newx items-center justify-between">
+    setData(newData);
+  };
+
+  if (!data) {
+    return (
+      <div className="mx-auto max-w-5xl px-6 py-8">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-5xl px-6 py-8">
+      <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="mt-2 text-muted-foreground">
@@ -286,7 +281,7 @@ navDataManager.update(data, editIndex, formData);
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Navigation Item?</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{deleteIndex !== null && data.navs[deleteIndex]?.name}"? This action cannot be undone.
+              Are you sure you want to delete &ldquo;{deleteIndex !== null && data.navs[deleteIndex]?.name}&rdquo;? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -300,4 +295,3 @@ navDataManager.update(data, editIndex, formData);
     </div>
   );
 }
-
