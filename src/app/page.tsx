@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -170,6 +171,8 @@ export default function Home() {
     return a.localeCompare(b);
   });
 
+  const isContextMenuEnabled = !deleteMode && !editMode && !moveMode;
+
   return (
     <div className="px-4 py-4">
       <div className="mb-4 flex items-center justify-between">
@@ -253,24 +256,74 @@ export default function Home() {
               </h2>
               <div className="flex flex-wrap gap-2">
                 {groupedNavs[category].map(({ nav, index }) => (
-                  <NavItem
-                    key={index}
-                    name={nav.name}
-                    url={nav.url}
-                    icon={nav.icon}
-                    localRepoPath={nav.localRepoPath}
-                    tags={nav.tags}
-                    description={nav.description}
-                    onDetailClick={() => handleNavItemClick(index)}
-                    isDeleteMode={deleteMode}
-                    isEditMode={editMode}
-                    isMoveMode={moveMode}
-                    draggable={moveMode}
-                    onDragStart={handleDragStart(index)}
-                    onDragOver={handleDragOver()}
-                    onDrop={handleDrop(index)}
-                    tagConfig={data.tags}
-                  />
+                  isContextMenuEnabled ? (
+                    <ContextMenu key={index}>
+                      <ContextMenuTrigger asChild>
+                        <div>
+                          <NavItem
+                            name={nav.name}
+                            url={nav.url}
+                            icon={nav.icon}
+                            localRepoPath={nav.localRepoPath}
+                            tags={nav.tags}
+                            description={nav.description}
+                            onDetailClick={() => handleNavItemClick(index)}
+                            isDeleteMode={deleteMode}
+                            isEditMode={editMode}
+                            isMoveMode={moveMode}
+                            draggable={moveMode}
+                            onDragStart={handleDragStart(index)}
+                            onDragOver={handleDragOver()}
+                            onDrop={handleDrop(index)}
+                            tagConfig={data.tags}
+                          />
+                        </div>
+                      </ContextMenuTrigger>
+                      <ContextMenuContent>
+                        <ContextMenuItem
+                          onSelect={() => {
+                            setEditIndex(index);
+                            setFormData(navToForm(data.navs[index]));
+                            setEditOpen(true);
+                            setEditMode(false);
+                            setDeleteMode(false);
+                          }}
+                        >
+                          Edit
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onSelect={() => {
+                            setDeleteIndex(index);
+                            setEditMode(false);
+                            setDeleteMode(false);
+                          }}
+                        >
+                          Delete
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                    </ContextMenu>
+                  ) : (
+                    <div key={index}>
+                      <NavItem
+                        name={nav.name}
+                        url={nav.url}
+                        icon={nav.icon}
+                        localRepoPath={nav.localRepoPath}
+                        tags={nav.tags}
+                        description={nav.description}
+                        onDetailClick={() => handleNavItemClick(index)}
+                        isDeleteMode={deleteMode}
+                        isEditMode={editMode}
+                        isMoveMode={moveMode}
+                        draggable={moveMode}
+                        onDragStart={handleDragStart(index)}
+                        onDragOver={handleDragOver()}
+                        onDrop={handleDrop(index)}
+                        tagConfig={data.tags}
+                      />
+                    </div>
+                  )
                 ))}
               </div>
             </div>
