@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Image from "next/image";
+import { Link } from "lucide-react";
 
 interface NavItemProps {
   name: string;
@@ -111,19 +112,22 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
             </div>
           )}
           <div className="flex items-center justify-between gap-2">
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground hover:underline flex-1 truncate"
-              onClick={(e) => {
-                if (isDeleteMode) {
-                  e.preventDefault();
-                }
-              }}
-            >
-              {url}
-            </a>
+            <Button variant="outline" size="sm" asChild>
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5"
+                onClick={(e) => {
+                  if (isDeleteMode) {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <Link className="h-4 w-4 flex-shrink-0" />
+                <span>URL</span>
+              </a>
+            </Button>
             <div className="flex items-center gap-2">
               {!isDeleteMode && (
                 <Button
