@@ -181,7 +181,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                       }}
                     >
                       <Code className="h-4 w-4" />
-                      <span>Open in VSCode</span>
+                      <span>Open in VS Code</span>
                     </Button>
                   </span>
                 </TooltipTrigger>
