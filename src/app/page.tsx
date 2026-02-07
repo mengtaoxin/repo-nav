@@ -31,7 +31,7 @@ import { navDataManager, type NavData } from "@/lib/nav-data";
 export default function Home() {
   const [data, setData] = useState<NavData | null>(() => navDataManager.load());
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: "", url: "", icon: "" });
+  const [formData, setFormData] = useState({ name: "", url: "", icon: "", localRepoPath: "" });
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [editMode, setEditMode] = useState(false);
@@ -43,7 +43,7 @@ export default function Home() {
 
     const newData = navDataManager.add(data, formData);
     setData(newData);
-    setFormData({ name: "", url: "", icon: "" });
+    setFormData({ name: "", url: "", icon: "", localRepoPath: "" });
     setOpen(false);
   };
 
@@ -65,6 +65,7 @@ export default function Home() {
         name: data!.navs[index].name,
         url: data!.navs[index].url,
         icon: data!.navs[index].icon,
+        localRepoPath: data!.navs[index].localRepoPath || "",
       });
       setEditOpen(true);
     }
@@ -75,7 +76,7 @@ export default function Home() {
 
     const newData = navDataManager.update(data, editIndex, formData);
     setData(newData);
-    setFormData({ name: "", url: "", icon: "" });
+    setFormData({ name: "", url: "", icon: "", localRepoPath: "" });
     setEditOpen(false);
     setEditIndex(null);
     setEditMode(false);
@@ -178,6 +179,15 @@ export default function Home() {
                     placeholder="https://www.example.com/favicon.ico"
                   />
                 </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="localRepoPath">Local Repo Path (Optional)</Label>
+                  <Input
+                    id="localRepoPath"
+                    value={formData.localRepoPath}
+                    onChange={(e) => setFormData({ ...formData, localRepoPath: e.target.value })}
+                    placeholder="/Users/username/repos/project"
+                  />
+                </div>
               </div>
               <DialogFooter>
                 <Button onClick={handleAdd}>Add</Button>
@@ -219,6 +229,7 @@ export default function Home() {
                 name={nav.name}
                 url={nav.url}
                 icon={nav.icon}
+                localRepoPath={nav.localRepoPath}
                 onClick={() => handleNavItemClick(index)}
                 isDeleteMode={deleteMode || editMode}
               />
@@ -231,7 +242,7 @@ export default function Home() {
         setEditOpen(open);
         if (!open) {
           setEditIndex(null);
-          setFormData({ name: "", url: "", icon: "" });
+          setFormData({ name: "", url: "", icon: "", localRepoPath: "" });
         }
       }}>
         <DialogContent className="sm:max-w-[425px]">
@@ -267,6 +278,15 @@ export default function Home() {
                 value={formData.icon}
                 onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                 placeholder="https://www.example.com/favicon.ico"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-localRepoPath">Local Repo Path (Optional)</Label>
+              <Input
+                id="edit-localRepoPath"
+                value={formData.localRepoPath}
+                onChange={(e) => setFormData({ ...formData, localRepoPath: e.target.value })}
+                placeholder="/Users/username/repos/project"
               />
             </div>
           </div>

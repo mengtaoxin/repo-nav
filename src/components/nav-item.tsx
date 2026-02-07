@@ -1,15 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 interface NavItemProps {
   name: string;
   url: string;
   icon: string;
+  localRepoPath?: string;
   onClick?: () => void;
   isDeleteMode?: boolean;
 }
 
-export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps) {
+export function NavItem({ name, url, icon, localRepoPath, onClick, isDeleteMode }: NavItemProps) {
   // Check if icon is a local/data URL (use Next.js Image) or external URL (use img tag)
   const isLocalIcon = icon && (
     icon.startsWith('data:') || 
@@ -56,15 +58,29 @@ export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps
         </div>
       </CardHeader>
       <CardContent>
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
-          onClick={(e) => isDeleteMode && e.preventDefault()}
-        >
-          {url}
-        </a>
+        <div className="flex items-center justify-between gap-2">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-muted-foreground hover:text-foreground hover:underline flex-1 truncate"
+            onClick={(e) => isDeleteMode && e.preventDefault()}
+          >
+            {url}
+          </a>
+          {localRepoPath && !isDeleteMode && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.location.href = `vscode://file/${localRepoPath}`;
+              }}
+            >
+              Open in VSCode
+            </Button>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

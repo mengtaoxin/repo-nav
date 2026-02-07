@@ -6,6 +6,7 @@ export interface NavItem {
   name: string;
   url: string;
   icon: string;
+  localRepoPath?: string;
 }
 
 export interface NavData {
