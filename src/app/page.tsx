@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,7 @@ import { NavItem } from "@/components/nav-item";
 import { navDataManager, type NavData } from "@/lib/nav-data";
 
 export default function Home() {
-  const [data, setData] = useState<NavData | null>(() => navDataManager.load());
+  const [data, setData] = useState<NavData | null>(null);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", url: "", icon: "", localRepoPath: "" });
   const [deleteMode, setDeleteMode] = useState(false);
@@ -37,6 +37,12 @@ export default function Home() {
   const [editMode, setEditMode] = useState(false);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [editOpen, setEditOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load data only on client side to avoid hydration mismatch
+  useEffect(() => {
+    setData(navDataManager.load());
+  }, []);
 
   const handleAdd = () => {
     if (!data || !formData.name || !formData.url) return;
