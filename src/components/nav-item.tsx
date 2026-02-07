@@ -10,13 +10,14 @@ interface NavItemProps {
 }
 
 export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps) {
-  // Check if icon is a valid data URL or relative path
-  const isValidIcon = icon && (
+  // Check if icon is a local/data URL (use Next.js Image) or external URL (use img tag)
+  const isLocalIcon = icon && (
     icon.startsWith('data:') || 
     icon.startsWith('/') || 
     icon.startsWith('./') ||
     icon.startsWith('../')
   );
+  const isExternalIcon = icon && (icon.startsWith('http://') || icon.startsWith('https://'));
 
   return (
     <Card 
@@ -26,8 +27,20 @@ export function NavItem({ name, url, icon, onClick, isDeleteMode }: NavItemProps
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            {isValidIcon && (
+            {isLocalIcon && (
               <Image
+                src={icon}
+                alt={name}
+                width={32}
+                height={32}
+                className="rounded"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            )}
+            {isExternalIcon && (
+              <img
                 src={icon}
                 alt={name}
                 width={32}

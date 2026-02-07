@@ -2,9 +2,9 @@
   "version": "1.0",
   "navs": [
     {
-      "name": "Example",
-      "url": "https://www.example.com",
-      "icon": "https://www.example.com/favicon.ico"
+      "name": "higress",
+      "url": "https://github.com/alibaba/higress",
+      "icon": "https://www.google.com/favicon.ico"
     }
   ]
 }
