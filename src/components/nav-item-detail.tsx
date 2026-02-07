@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { isValidUrl, isValidUrlOrEmpty } from "@/lib/validator";
 
 export interface NavItemDetailFormData {
   name: string;
@@ -25,7 +26,7 @@ export interface NavItemDetailFormData {
 interface NavItemDetailProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  mode: "view" | "edit";
+  mode: "view" | "edit" | "add";
   formData: NavItemDetailFormData;
   onFieldChange?: (field: keyof NavItemDetailFormData, value: string) => void;
   onSubmit?: () => void;
@@ -39,9 +40,11 @@ export function NavItemDetail({
   onFieldChange,
   onSubmit,
 }: NavItemDetailProps) {
-  const isEditable = mode === "edit";
-  const title = isEditable ? "Edit Navigation Item" : "Navigation Details";
-  const description = isEditable
+  const isEditable = mode === "edit" || mode === "add";
+  const title = mode === "add" ? "Add Navigation Item" : mode === "edit" ? "Edit Navigation Item" : "Navigation Details";
+  const description = mode === "add"
+    ? "Add a new navigation link to your dashboard."
+    : mode === "edit"
     ? "Update the navigation link details."
     : "View navigation link details.";
 
@@ -49,6 +52,11 @@ export function NavItemDetail({
     if (!isEditable || !onFieldChange) return;
     onFieldChange(field, e.target.value);
   };
+
+  // Validate URLs
+  const isUrlValid = isValidUrl(formData.url);
+  const isIconUrlValid = isValidUrlOrEmpty(formData.icon);
+  const isFormValid = isUrlValid && isIconUrlValid && formData.name.trim() !== "";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -78,7 +86,11 @@ export function NavItemDetail({
               placeholder="https://www.example.com"
               disabled={!isEditable}
               readOnly={!isEditable}
+              className={!isEditable ? "" : !isUrlValid && formData.url ? "border-red-500" : ""}
             />
+            {isEditable && !isUrlValid && formData.url && (
+              <p className="text-sm text-red-500">Please enter a valid URL</p>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="detail-icon">Icon URL (Optional)</Label>
@@ -89,7 +101,11 @@ export function NavItemDetail({
               placeholder="https://www.example.com/favicon.ico"
               disabled={!isEditable}
               readOnly={!isEditable}
+              className={!isEditable ? "" : !isIconUrlValid && formData.icon ? "border-red-500" : ""}
             />
+            {isEditable && !isIconUrlValid && formData.icon && (
+              <p className="text-sm text-red-500">Please enter a valid URL</p>
+            )}
           </div>
           <div className="grid gap-2">
             <Label htmlFor="detail-localRepoPath">Local Repo Path (Optional)</Label>
@@ -132,7 +148,9 @@ export function NavItemDetail({
         </div>
         <DialogFooter showCloseButton={!isEditable}>
           {isEditable && (
-            <Button onClick={onSubmit}>Update</Button>
+            <Button onClick={onSubmit} disabled={!isFormValid}>
+              {mode === "add" ? "Add" : "Update"}
+            </Button>
           )}
         </DialogFooter>
       </DialogContent>

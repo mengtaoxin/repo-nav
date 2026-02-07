@@ -3,17 +3,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -181,78 +170,7 @@ export default function Home() {
           >
             {moveMode ? "Cancel Move" : "Move"}
           </Button>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button>Add Navigation</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Add Navigation Item</DialogTitle>
-                <DialogDescription>
-                  Add a new navigation link to your dashboard.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Example"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="url">URL</Label>
-                  <Input
-                    id="url"
-                    value={formData.url}
-                    onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                    placeholder="https://www.example.com"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="icon">Icon URL</Label>
-                  <Input
-                    id="icon"
-                    value={formData.icon}
-                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                    placeholder="https://www.example.com/favicon.ico"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="localRepoPath">Local Repo Path (Optional)</Label>
-                  <Input
-                    id="localRepoPath"
-                    value={formData.localRepoPath}
-                    onChange={(e) => setFormData({ ...formData, localRepoPath: e.target.value })}
-                    placeholder="/Users/username/repos/project"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="tags">Tags (comma-separated, optional)</Label>
-                  <Input
-                    id="tags"
-                    value={formData.tags}
-                    onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                    placeholder="ai, alibaba"
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="description">Description (optional)</Label>
-                  <Input
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Brief overview of the item"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button onClick={handleAdd}>Add</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <Button onClick={() => setOpen(true)}>Add Navigation</Button>
         </div>
       </div>
 
@@ -335,6 +253,20 @@ export default function Home() {
         formData={formData}
         onFieldChange={(field, value) => setFormData({ ...formData, [field]: value })}
         onSubmit={handleEdit}
+      />
+
+      <NavItemDetail
+        open={open}
+        onOpenChange={(open) => {
+          setOpen(open);
+          if (!open) {
+            setFormData(emptyFormData);
+          }
+        }}
+        mode="add"
+        formData={formData}
+        onFieldChange={(field, value) => setFormData({ ...formData, [field]: value })}
+        onSubmit={handleAdd}
       />
 
       <AlertDialog open={deleteIndex !== null} onOpenChange={(open) => !open && setDeleteIndex(null)}>
