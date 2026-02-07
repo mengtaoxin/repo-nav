@@ -125,7 +125,7 @@ export function NavItemDetail({
             )}
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="detail-category">Category (optional)</Label>
+            <Label htmlFor="detail-category">Category (Optional)</Label>
             <Input
               id="detail-category"
               value={formData.category}
@@ -136,7 +136,7 @@ export function NavItemDetail({
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="detail-tags">Tags (comma-separated, optional)</Label>
+            <Label htmlFor="detail-tags">Tags (Optional, comma-separated)</Label>
             <Input
               id="detail-tags"
               value={formData.tags}
