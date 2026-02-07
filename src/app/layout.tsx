@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import seoConfig from "@/resources/seo-config.json";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,45 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Repo Nav",
-  description: "Starter workspace for a Next.js + shadcn/ui app.",
+  title: seoConfig.site.title,
+  description: seoConfig.site.description,
+  keywords: seoConfig.site.keywords,
+  authors: [{ name: seoConfig.authors.name }],
+  creator: seoConfig.authors.creator,
+  publisher: seoConfig.authors.publisher,
+  viewport: seoConfig.viewport,
+  openGraph: {
+    type: "website" as const,
+    locale: seoConfig.openGraph.locale,
+    url: seoConfig.site.url,
+    siteName: seoConfig.openGraph.siteName,
+    title: seoConfig.site.title,
+    description: seoConfig.site.description,
+    images: [
+      {
+        url: seoConfig.openGraph.imageUrl,
+        width: seoConfig.openGraph.imageWidth,
+        height: seoConfig.openGraph.imageHeight,
+        alt: seoConfig.openGraph.imageAlt,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image" as const,
+    title: seoConfig.site.title,
+    description: seoConfig.site.shortDescription,
+    images: [seoConfig.twitter.imageUrl],
+  },
+  robots: {
+    index: seoConfig.robots.index,
+    follow: seoConfig.robots.follow,
+    "max-image-preview": (seoConfig.robots.maxImagePreview as any),
+    "max-snippet": seoConfig.robots.maxSnippet,
+    "max-video-preview": seoConfig.robots.maxVideoPreview,
+  },
+  alternates: {
+    canonical: seoConfig.site.url,
+  },
 };
 
 export default function RootLayout({
@@ -24,8 +62,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const schemaData = {
+    ...seoConfig.schema,
+    "name": seoConfig.site.name,
+    "description": seoConfig.site.description,
+    "url": seoConfig.site.url,
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-foreground antialiased`}
       >
