@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -40,6 +41,9 @@ export default function RootLayout({
                 <span>Projects</span>
                 <span>Insights</span>
                 <span>Settings</span>
+                <Link href="/dashboard" className="hover:text-foreground transition-colors">
+                  Dashboard
+                </Link>
               </nav>
             </div>
           </header>
