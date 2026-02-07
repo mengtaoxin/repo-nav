@@ -127,7 +127,7 @@ export default function Home() {
 
   if (!data) {
     return (
-      <div className="mx-auto max-w-5xl px-6 py-8">
+      <div className="px-6 py-8">
         <p className="text-muted-foreground">Loading...</p>
       </div>
     );
@@ -136,7 +136,7 @@ export default function Home() {
   const detailFormData = detailIndex !== null ? navToForm(data.navs[detailIndex]) : emptyFormData;
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
+    <div className="px-6 py-8">
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Repository Navigation</h1>
@@ -211,7 +211,7 @@ export default function Home() {
               </p>
             </div>
           )}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="flex flex-wrap gap-2">
             {data.navs.map((nav, index) => (
               <NavItem
                 key={index}
