@@ -106,18 +106,18 @@ export default function TagsPage() {
 
   if (!data) {
     return (
-      <div className="mx-auto max-w-5xl px-6 py-8">
+      <div className="mx-auto max-w-5xl px-4 py-4">
         <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="mx-auto max-w-5xl px-4 py-4">
+      <div className="mb-4 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Tags</h1>
-          <p className="mt-2 text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight">Tags</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Manage your global tags
           </p>
         </div>

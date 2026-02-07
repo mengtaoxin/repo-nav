@@ -63,15 +63,15 @@ export default function Settings() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="mt-2 text-muted-foreground">
+    <div className="mx-auto max-w-2xl px-4 py-4">
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Manage your preferences and data
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Theme Settings */}
         <Card>
           <CardHeader>

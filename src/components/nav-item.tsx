@@ -52,7 +52,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
 
   return (
     <Card 
-      className={`w-[300px] relative transition-all hover:shadow-lg ${isDeleteMode ? 'cursor-pointer hover:border-destructive' : 'hover:border-primary'} ${draggable ? 'cursor-move' : ''}`}
+      className={`w-[280px] relative transition-all hover:shadow-lg ${isDeleteMode ? 'cursor-pointer hover:border-destructive' : 'hover:border-primary'} ${draggable ? 'cursor-move' : ''}`}
       onClick={cardClickHandler}
       draggable={draggable}
       onDragStart={onDragStart}
@@ -60,8 +60,8 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
       onDrop={onDrop}
     >
       <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2">
             {draggable && !isDeleteMode && (
               <svg
                 className="w-5 h-5 text-muted-foreground flex-shrink-0"
@@ -106,14 +106,14 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
         </div>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
+        <div className="space-y-2">
           {description && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="text-xs text-muted-foreground line-clamp-2">
               {description}
             </p>
           )}
           {tags && tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1">
               {tags.map((tag, index) => {
                 const iconUrl = getTagIcon(tag);
                 return (
@@ -126,14 +126,14 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
               })}
             </div>
           )}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-1">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-0.5">
               {isInMode ? (
                 <Button 
                   variant="outline" 
                   size="sm" 
                   disabled
-                  className="h-7 px-2 text-xs"
+                  className="h-6 px-1.5 text-xs"
                 >
                   <Link className="h-3 w-3 flex-shrink-0" />
                   <span>URL</span>
@@ -143,7 +143,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                   variant="outline" 
                   size="sm" 
                   asChild
-                  className="h-7 px-2 text-xs"
+                  className="h-6 px-1.5 text-xs"
                 >
                   <a
                     href={url}
@@ -161,7 +161,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                 size="sm"
                 disabled={isInMode}
                 onClick={onDetailClick}
-                className="h-7 px-2 text-xs"
+                className="h-6 px-1.5 text-xs"
               >
                 <Info className="h-3 w-3" />
                 <span>Details</span>
@@ -182,7 +182,7 @@ export function NavItem({ name, url, icon, localRepoPath, tags, description, onD
                         }
                         window.location.href = `vscode://file/${localRepoPath}`;
                       }}
-                      className="h-7 px-2 text-xs"
+                      className="h-6 px-1.5 text-xs"
                     >
                       <Code className="h-3 w-3" />
                       <span>Open in VS Code</span>

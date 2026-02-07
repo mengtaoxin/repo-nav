@@ -32,14 +32,14 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="flex min-h-screen flex-col">
             <header className="border-b">
-              <div className="flex w-full items-center justify-between px-6 py-4">
+              <div className="flex w-full items-center justify-between px-4 py-3">
                 <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                   <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-semibold text-primary-foreground">
                     RN
                   </div>
                   <span className="text-sm font-semibold tracking-tight">Repo Nav</span>
                 </Link>
-                <nav className="flex items-center gap-6 text-sm text-muted-foreground">
+                <nav className="flex items-center gap-4 text-sm text-muted-foreground">
                   <Link href="/tags" className="hover:text-foreground transition-colors">
                     Tags
                   </Link>

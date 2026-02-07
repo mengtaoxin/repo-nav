@@ -155,15 +155,15 @@ export default function Home() {
   });
 
   return (
-    <div className="px-6 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="px-4 py-4">
+      <div className="mb-4 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Repository Navigation</h1>
-          <p className="mt-2 text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight">Repository Navigation</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Shortcuts for Repositories
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-1">
           <Button 
             variant={editMode ? "default" : "outline"}
             onClick={() => {
@@ -210,29 +210,29 @@ export default function Home() {
       ) : (
         <>
           {deleteMode && (
-            <div className="mb-4 rounded-lg border border-destructive bg-destructive/10 p-4">
-              <p className="text-sm text-destructive font-medium">
+            <div className="mb-2 rounded-lg border border-destructive bg-destructive/10 p-2">
+              <p className="text-xs text-destructive font-medium">
                 Delete mode is active. Click on any navigation item to delete it.
               </p>
             </div>
           )}
           {editMode && (
-            <div className="mb-4 rounded-lg border border-primary bg-primary/10 p-4">
-              <p className="text-sm text-primary font-medium">
+            <div className="mb-2 rounded-lg border border-primary bg-primary/10 p-2">
+              <p className="text-xs text-primary font-medium">
                 Edit mode is active. Click on any navigation item to edit it.
               </p>
             </div>
           )}
           {moveMode && (
-            <div className="mb-4 rounded-lg border border-blue-500 bg-blue-500/10 p-4">
-              <p className="text-sm text-blue-500 font-medium">
+            <div className="mb-2 rounded-lg border border-blue-500 bg-blue-500/10 p-2">
+              <p className="text-xs text-blue-500 font-medium">
                 Move mode is active. Drag and drop navigation items to reorder them.
               </p>
             </div>
           )}
           {sortedCategories.map((category) => (
-            <div key={category} className="mb-6">
-              <h2 className="mb-3 text-lg font-semibold capitalize text-foreground">
+            <div key={category} className="mb-4">
+              <h2 className="mb-2 text-base font-semibold capitalize text-foreground">
                 {category === "uncategorized" ? "Uncategorized" : category}
               </h2>
               <div className="flex flex-wrap gap-2">
