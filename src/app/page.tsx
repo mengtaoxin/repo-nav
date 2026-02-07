@@ -47,6 +47,9 @@ export default function Home() {
   const [formData, setFormData] = useState({ name: "", url: "", icon: "" });
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
@@ -87,7 +90,32 @@ export default function Home() {
   const handleNavItemClick = (index: number) => {
     if (deleteMode) {
       setDeleteIndex(index);
+    } else if (editMode) {
+      setEditIndex(index);
+      setFormData({
+        name: data!.navs[index].name,
+        url: data!.navs[index].url,
+        icon: data!.navs[index].icon,
+      });
+      setEditOpen(true);
     }
+  };
+
+  const handleEdit = () => {
+    if (!data || editIndex === null || !formData.name || !formData.url) return;
+
+    const newData = {
+      ...data,
+      navs: data.navs.map((nav, i) => 
+        i === editIndex ? formData : nav
+      ),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+    setData(newData);
+    setFormData({ name: "", url: "", icon: "" });
+    setEditOpen(false);
+    setEditIndex(null);
+    setEditMode(false);
   };
 
   const handleReset = () => {
@@ -114,8 +142,20 @@ export default function Home() {
         </div>
         <div className="flex gap-2">
           <Button 
+            variant={editMode ? "default" : "outline"}
+            onClick={() => {
+              setEditMode(!editMode);
+              setDeleteMode(false);
+            }}
+          >
+            {editMode ? "Cancel Edit" : "Edit"}
+          </Button>
+          <Button 
             variant={deleteMode ? "destructive" : "outline"}
-            onClick={() => setDeleteMode(!deleteMode)}
+            onClick={() => {
+              setDeleteMode(!deleteMode);
+              setEditMode(false);
+            }}
           >
             {deleteMode ? "Cancel Delete" : "Delete"}
           </Button>
@@ -202,6 +242,13 @@ export default function Home() {
               </p>
             </div>
           )}
+          {editMode && (
+            <div className="mb-4 rounded-lg border border-primary bg-primary/10 p-4">
+              <p className="text-sm text-primary font-medium">
+                Edit mode is active. Click on any navigation item to edit it.
+              </p>
+            </div>
+          )}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {data.navs.map((nav, index) => (
               <NavItem
@@ -210,12 +257,61 @@ export default function Home() {
                 url={nav.url}
                 icon={nav.icon}
                 onClick={() => handleNavItemClick(index)}
-                isDeleteMode={deleteMode}
+                isDeleteMode={deleteMode || editMode}
               />
             ))}
           </div>
         </>
       )}
+
+      <Dialog open={editOpen} onOpenChange={(open) => {
+        setEditOpen(open);
+        if (!open) {
+          setEditIndex(null);
+          setFormData({ name: "", url: "", icon: "" });
+        }
+      }}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Navigation Item</DialogTitle>
+            <DialogDescription>
+              Update the navigation link details.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="edit-name">Name</Label>
+              <Input
+                id="edit-name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Example"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-url">URL</Label>
+              <Input
+                id="edit-url"
+                value={formData.url}
+                onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                placeholder="https://www.example.com"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-icon">Icon URL</Label>
+              <Input
+                id="edit-icon"
+                value={formData.icon}
+                onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                placeholder="https://www.example.com/favicon.ico"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleEdit}>Update</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <AlertDialog open={deleteIndex !== null} onOpenChange={(open) => !open && setDeleteIndex(null)}>
         <AlertDialogContent>
