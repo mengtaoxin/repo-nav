@@ -26,20 +26,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { NavItem } from "@/components/nav-item";
-import defaultData from "@/resources/default-data.json";
-
-const STORAGE_KEY = "repo_nav_data_v1";
-
-interface NavItem {
-  name: string;
-  url: string;
-  icon: string;
-}
-
-interface NavData {
-  version: string;
-  navs: NavItem[];
-}
+import { navDataManager, type NavData, type NavItem as NavItemType } from "@/lib/nav-data";
 
 export default function Home() {
   const [data, setData] = useState<NavData | null>(null);
@@ -65,10 +52,14 @@ export default function Home() {
     if (!data || !formData.name || !formData.url) return;
 
     const newData = {
-      ...data,
-      navs: [...data.navs, formData],
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
+      ...dloadedData = navDataManager.load();
+    setData(loadedData);
+  }, []);
+
+  const handleAdd = () => {
+    if (!data || !formData.name || !formData.url) return;
+
+    const newData = navDataManager.add(data, formData);
     setData(newData);
     setFormData({ name: "", url: "", icon: "" });
     setOpen(false);
@@ -77,24 +68,7 @@ export default function Home() {
   const handleDeleteConfirm = () => {
     if (!data || deleteIndex === null) return;
 
-    const newData = {
-      ...data,
-      navs: data.navs.filter((_, i) => i !== deleteIndex),
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
-    setData(newData);
-    setDeleteIndex(null);
-    setDeleteMode(false);
-  };
-
-  const handleNavItemClick = (index: number) => {
-    if (deleteMode) {
-      setDeleteIndex(index);
-    } else if (editMode) {
-      setEditIndex(index);
-      setFormData({
-        name: data!.navs[index].name,
-        url: data!.navs[index].url,
+    const newData = navDataManager.delete(data, deleteIndex
         icon: data!.navs[index].icon,
       });
       setEditOpen(true);
@@ -117,23 +91,17 @@ export default function Home() {
     setEditIndex(null);
     setEditMode(false);
   };
-
-  const handleReset = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
-    setData(defaultData as NavData);
+navDataManager.update(data, editIndex, formData);
+    setData(newData);
+    setFormData({ name: "", url: "", icon: "" });
+    setEditOpen(false);
+    setEditIndex(null);
+    setEditMode(false);
   };
 
-  if (!data) {
-    return (
-      <div className="mx-auto max-w-5xl px-6 py-8">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
-      <div className="mb-8 flex items-center justify-between">
+  const handleReset = () => {
+    const newData = navDataManager.reset();
+    setData(newx items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="mt-2 text-muted-foreground">
